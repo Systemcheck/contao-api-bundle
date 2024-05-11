@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Security\User;
+namespace Systemcheck\ContaoApiBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface as SymfonyAdvancedUserInterface;
 

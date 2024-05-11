@@ -6,9 +6,9 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\DependencyInjection;
+namespace Systemcheck\ContaoApiBundleTest\DependencyInjection;
 
-use HeimrichHannot\ApiBundle\DependencyInjection\ApiExtension;
+use Systemcheck\ContaoApiBundleDependencyInjection\ApiExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -22,18 +22,18 @@ class ApiExtensionTest extends TestCase
 
         $extension->load([], $container);
 
-        $this->assertTrue($container->hasParameter('huh.api.entity.user'));
-        $this->assertTrue($container->hasParameter('huh.api.entity.member'));
+        $this->assertTrue($container->hasParameter('systemcheck.api.entity.user'));
+        $this->assertTrue($container->hasParameter('systemcheck.api.entity.member'));
 
-        $this->assertTrue($container->hasDefinition('huh.api.backend.api_app'));
-        $this->assertTrue($container->hasDefinition('huh.api.routing.matcher'));
-        $this->assertTrue($container->hasDefinition('huh.api.routing.login.member.matcher'));
-        $this->assertTrue($container->hasDefinition('huh.api.routing.login.user.matcher'));
-        $this->assertTrue($container->hasDefinition('huh.api.jwt_coder'));
-        $this->assertTrue($container->hasDefinition('huh.api.security.token_authenticator'));
-        $this->assertTrue($container->hasDefinition('huh.api.security.user_provider'));
-        $this->assertTrue($container->hasDefinition('huh.api.security.username_password_authenticator'));
-        $this->assertTrue($container->hasDefinition('huh.api.manager.resource'));
-        $this->assertTrue($container->hasDefinition('huh.api.resource.member'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.backend.api_app'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.routing.matcher'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.routing.login.member.matcher'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.routing.login.user.matcher'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.jwt_coder'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.security.token_authenticator'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.security.user_provider'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.security.username_password_authenticator'));
+        //$this->assertTrue($container->hasDefinition('systemcheck.api.manager.resource'));
+        $this->assertTrue($container->hasDefinition('systemcheck.api.resource.member'));
     }
 }

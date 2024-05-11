@@ -6,15 +6,15 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Security;
+namespace Systemcheck\ContaoApiBundleTest\Security;
 
 use Contao\TestCase\ContaoTestCase;
 use Contao\UserModel;
-use HeimrichHannot\ApiBundle\Entity\User;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
-use HeimrichHannot\ApiBundle\Security\JWTCoder;
-use HeimrichHannot\ApiBundle\Security\TokenAuthenticator;
-use HeimrichHannot\ApiBundle\Security\User\UserProvider;
+use Systemcheck\ContaoApiBundleEntity\User;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundle\Api\Security\JWTCoder;
+use Systemcheck\ContaoApiBundle\Api\Security\TokenAuthenticator;
+use Systemcheck\ContaoApiBundle\Api\Security\User\UserProvider;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -29,7 +29,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
     {
         $authenticator = new TokenAuthenticator($this->mockContaoFramework(), new JWTCoder('secret'), new Translator('en'));
 
-        $this->assertInstanceOf('HeimrichHannot\ApiBundle\Security\TokenAuthenticator', $authenticator);
+        $this->assertInstanceOf('Systemcheck\ContaoApiBundle\Api\Security\TokenAuthenticator', $authenticator);
     }
 
     /**
@@ -46,7 +46,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
         try {
             $authenticator->getCredentials($request);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.missing_authorization_header', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.missing_authorization_header', $e->getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
         try {
             $authenticator->getCredentials($request);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.malformed_authorization_header', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.malformed_authorization_header', $e->getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
         try {
             $authenticator->getCredentials($request);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.missing_api_key', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.missing_api_key', $e->getMessage());
         }
     }
 
@@ -121,7 +121,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
         try {
             $authenticator->getUser($credentials, $userProvider);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.invalid_token', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.invalid_token', $e->getMessage());
         }
     }
 
@@ -135,7 +135,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
         $translator = new Translator('en');
         $authenticator = new TokenAuthenticator($framework, $encoder, $translator);
 
-        $token = $encoder->encode(['username' => 'user@test.tld', 'entity' => 'huh.api.entity.user'], -1);
+        $token = $encoder->encode(['username' => 'user@test.tld', 'entity' => 'systemcheck.api.entity.user'], -1);
 
         $credentials = ['token' => $token, 'key' => 'API_KEY'];
 
@@ -144,7 +144,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
         try {
             $authenticator->getUser($credentials, $userProvider);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.malformed_jwt', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.malformed_jwt', $e->getMessage());
         }
     }
 
@@ -158,7 +158,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
         $translator = new Translator('en');
         $authenticator = new TokenAuthenticator($framework, $encoder, $translator);
 
-        $token = $encoder->encode(['entity' => 'huh.api.entity.user']);
+        $token = $encoder->encode(['entity' => 'systemcheck.api.entity.user']);
 
         $credentials = ['token' => $token, 'key' => 'API_KEY'];
 
@@ -167,7 +167,7 @@ class TokenAuthenticatorTest extends ContaoTestCase
         try {
             $authenticator->getUser($credentials, $userProvider);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.invalid_jwt', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.invalid_jwt', $e->getMessage());
         }
     }
 
@@ -202,12 +202,12 @@ class TokenAuthenticatorTest extends ContaoTestCase
         $translator = new Translator('en');
         $authenticator = new TokenAuthenticator($framework, $encoder, $translator);
 
-        $token = $encoder->encode(['username' => 'user@test.tld', 'entity' => 'huh.api.entity.user']);
+        $token = $encoder->encode(['username' => 'user@test.tld', 'entity' => 'systemcheck.api.entity.user']);
 
         $credentials = ['token' => $token, 'key' => 'API_KEY'];
 
         $container = $this->mockContainer();
-        $container->setParameter('huh.api.entity.user', User::class);
+        $container->setParameter('systemcheck.api.entity.user', User::class);
 
         $userProvider = new UserProvider($framework, $translator);
         $userProvider->setContainer($container);
@@ -236,15 +236,15 @@ class TokenAuthenticatorTest extends ContaoTestCase
 
         $definition = new Definition(ApiAppModel::class, []);
         $definition->addMethodCall('setFramework', [$this->mockContaoFramework()]);
-        $container->setDefinition('huh.api.model.app', $definition);
-        $container->setParameter('huh.api.entity.user', User::class);
+        $container->setDefinition('systemcheck.api.model.app', $definition);
+        $container->setParameter('systemcheck.api.entity.user', User::class);
 
         $authenticator->setContainer($container);
 
         try {
             $authenticator->checkCredentials($credentials, $user);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.invalid_api_key', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.invalid_api_key', $e->getMessage());
         }
     }
 
@@ -290,15 +290,15 @@ class TokenAuthenticatorTest extends ContaoTestCase
 
         $definition = new Definition(ApiAppModel::class, []);
         $definition->addMethodCall('setFramework', [$framework]);
-        $container->setDefinition('huh.api.model.app', $definition);
-        $container->setParameter('huh.api.entity.user', User::class);
+        $container->setDefinition('systemcheck.api.model.app', $definition);
+        $container->setParameter('systemcheck.api.entity.user', User::class);
 
         $authenticator->setContainer($container);
 
         try {
             $authenticator->checkCredentials($credentials, $user);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.user_not_allowed_for_api', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.user_not_allowed_for_api', $e->getMessage());
         }
     }
 
@@ -345,8 +345,8 @@ class TokenAuthenticatorTest extends ContaoTestCase
 
         $definition = new Definition(ApiAppModel::class, []);
         $definition->addMethodCall('setFramework', [$framework]);
-        $container->setDefinition('huh.api.model.app', $definition);
-        $container->setParameter('huh.api.entity.user', User::class);
+        $container->setDefinition('systemcheck.api.model.app', $definition);
+        $container->setParameter('systemcheck.api.entity.user', User::class);
 
         $authenticator->setContainer($container);
 

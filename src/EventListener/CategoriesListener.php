@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\EventListener;
+namespace Systemcheck\ContaoApiBundle\EventListener;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
@@ -24,13 +24,13 @@ class CategoriesListener
             ->addField('categories', 'resourceActions')
             ->applyToPalette('resource', 'tl_api_app');
 
-        Category::addMultipleCategoriesFieldToDca(
+        /*Category::addMultipleCategoriesFieldToDca(
             'tl_api_app', 'categories',
             [
                 'addPrimaryCategory' => false,
                 'forcePrimaryCategory' => false,
                 'mandatory' => false,
             ]
-        );
+        );*/
     }
 }

@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\DataContainer;
+namespace Systemcheck\ContaoApiBundleDataContainer;
 
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\Date;

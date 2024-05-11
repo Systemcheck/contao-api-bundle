@@ -1,3 +1,4 @@
 parameters:
-  huh.api.entity.user: HeimrichHannot\ApiBundle\Entity\User
-  huh.api.entity.member: HeimrichHannot\ApiBundle\Entity\Member
+  systemcheck.api.entity.user: Systemcheck\ContaoApiBundle\Entity\User
+  systemcheck.api.entity.member: Systemcheck\ContaoApiBundle\Entity\Member
+  secret: 'okend23873hgf8n2873zedh2838hbcd08237cb'

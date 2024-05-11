@@ -6,9 +6,9 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\ApiResource;
+namespace Systemcheck\ContaoApiBundle\ApiResource;
 
-use HeimrichHannot\ApiBundle\Security\User\UserInterface;
+use Systemcheck\ContaoApiBundle\Api\Security\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 interface ResourceInterface

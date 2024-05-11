@@ -6,12 +6,12 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\DependencyInjection\Compiler;
+namespace Systemcheck\ContaoApiBundleTest\DependencyInjection\Compiler;
 
 use Contao\TestCase\ContaoTestCase;
-use HeimrichHannot\ApiBundle\ApiResource\MemberResource;
-use HeimrichHannot\ApiBundle\DependencyInjection\Compiler\ApiResourcePass;
-use HeimrichHannot\ApiBundle\Manager\ApiResourceManager;
+use Systemcheck\ContaoApiBundle\Api\Resource\MemberResource;
+use Systemcheck\ContaoApiBundleDependencyInjection\Compiler\ApiResourcePass;
+use Systemcheck\ContaoApiBundle\Manager\ApiResourceManager;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
@@ -40,13 +40,13 @@ class ApiResourcePassTest extends ContaoTestCase
         $container = new ContainerBuilder();
 
         $definition = new Definition(ApiResourceManager::class, [$this->mockContaoFramework()]);
-        $container->setDefinition('huh.api.manager.resource', $definition);
+        $container->setDefinition('systemcheck.api.manager.resource', $definition);
 
         $pass = new ApiResourcePass();
         $pass->process($container);
 
         /** @var ApiResourceManager $manager */
-        $manager = $container->get('huh.api.manager.resource');
+        $manager = $container->get('systemcheck.api.manager.resource');
         $this->assertEmpty($manager->all());
     }
 
@@ -61,14 +61,14 @@ class ApiResourcePassTest extends ContaoTestCase
 
         $definition = new Definition(ApiResourceManager::class, [$this->mockContaoFramework()]);
 
-        $container->setDefinition('huh.api.manager.resource', $definition);
-        $container->register('huh.api.resource.member', MemberResource::class)->addTag('huh.api.resource', []);
+        $container->setDefinition('systemcheck.api.manager.resource', $definition);
+        $container->register('systemcheck.api.resource.member', MemberResource::class)->addTag('systemcheck.api.resource', []);
 
         $pass = new ApiResourcePass();
         $pass->process($container);
 
         /** @var ApiResourceManager $manager */
-        $manager = $container->get('huh.api.manager.resource');
+        $manager = $container->get('systemcheck.api.manager.resource');
         $this->assertEmpty($manager->all());
     }
 
@@ -81,14 +81,14 @@ class ApiResourcePassTest extends ContaoTestCase
 
         $definition = new Definition(ApiResourceManager::class, [$this->mockContaoFramework()]);
 
-        $container->setDefinition('huh.api.manager.resource', $definition);
-        $container->register('huh.api.resource.member', MemberResource::class)->addTag('huh.api.resource', ['alias' => 'member']);
+        $container->setDefinition('systemcheck.api.manager.resource', $definition);
+        $container->register('systemcheck.api.resource.member', MemberResource::class)->addTag('systemcheck.api.resource', ['alias' => 'member']);
 
         $pass = new ApiResourcePass();
         $pass->process($container);
 
         /** @var ApiResourceManager $manager */
-        $manager = $container->get('huh.api.manager.resource');
+        $manager = $container->get('systemcheck.api.manager.resource');
         $this->assertCount(1, $manager->all());
     }
 }

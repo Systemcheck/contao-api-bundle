@@ -1,0 +1,15 @@
+services:
+
+    Systemcheck\ContaoApiBundle\EventListener\DataContainer\Labels\LimitedFieldOptionsCallbackListener:
+        public: true
+        tags:
+            - { name: 'contao.callbacks', table: 'tl_api_app_action', target: 'fields.field.options', priority: -1 }
+        arguments:
+            - '@doctrine.dbal.default_connection'
+
+    Systemcheck\ContaoApiBundle\EventListener\DataContainer\Labels\PublishedFieldOptionsCallbackListener:
+        public: true
+        tags:
+            - { name: 'contao.callbacks.published', table: 'tl_api_app_action', target: 'fields.field.options', priority: -1 }
+        arguments:
+            - '@doctrine.dbal.default_connection'

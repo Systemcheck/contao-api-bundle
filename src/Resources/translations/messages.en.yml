@@ -1,33 +1,33 @@
 # exception messages
-huh.api.exception.auth.required: Authentication Required
-huh.api.exception.auth.invalid_credentials: Invalid username or password
-huh.api.exception.auth.post_method_only: Authentication only allowed by POST HTTP-Method.
-huh.api.exception.auth.refresh_not_possible: Cannot refresh a Contao user.
-huh.api.exception.auth.invalid_username: Invalid username
-huh.api.exception.auth.user_not_found: 'Could not find user with name %username%'
-huh.api.exception.auth.user_not_existing: 'Member with name %username% does not exist'
-huh.api.exception.auth.invalid_token: Invalid token
-huh.api.exception.auth.token_expired: Token expired
-huh.api.exception.auth.missing_authorization_header: Missing Authorization Header
-huh.api.exception.auth.malformed_authorization_header: Malformed Authorization Header
-huh.api.exception.auth.missing_api_key: Missing API key
-huh.api.exception.auth.invalid_api_key: Invalid API key
-huh.api.exception.auth.malformed_jwt: Malformed JWT
-huh.api.exception.auth.invalid_jwt: Invalid JWT
-huh.api.exception.auth.user_not_allowed_for_api: 'Given user has no access to API with key %key%'
-huh.api.exception.auth.missing_entity: 'User entity parameter is missing'
-huh.api.exception.auth.missing_entity_class: 'User entity for parameter %entity% does not exist'
-huh.api.exception.auth.missing_entity_attribute: 'User entity parameter attribute is missing'
-huh.api.exception.resource_not_existing: 'Resource with alias: %alias% does not exist'
-huh.api.exception.resource_action_not_allowed: 'No access to resource %resource% and action %action%'
+systemcheck.api.exception.auth.required: Authentication Required
+systemcheck.api.exception.auth.invalid_credentials: Invalid username or password
+systemcheck.api.exception.auth.post_method_only: Authentication only allowed by POST HTTP-Method.
+systemcheck.api.exception.auth.refresh_not_possible: Cannot refresh a Contao user.
+systemcheck.api.exception.auth.invalid_username: Invalid username
+systemcheck.api.exception.auth.user_not_found: 'Could not find user with name %username%'
+systemcheck.api.exception.auth.user_not_existing: 'Member with name %username% does not exist'
+systemcheck.api.exception.auth.invalid_token: Invalid token
+systemcheck.api.exception.auth.token_expired: Token expired
+systemcheck.api.exception.auth.missing_authorization_header: Missing Authorization Header
+systemcheck.api.exception.auth.malformed_authorization_header: Malformed Authorization Header
+systemcheck.api.exception.auth.missing_api_key: Missing API key
+systemcheck.api.exception.auth.invalid_api_key: Invalid API key
+systemcheck.api.exception.auth.malformed_jwt: Malformed JWT
+systemcheck.api.exception.auth.invalid_jwt: Invalid JWT
+systemcheck.api.exception.auth.user_not_allowed_for_api: 'Given user has no access to API with key %key%'
+systemcheck.api.exception.auth.missing_entity: 'User entity parameter is missing'
+systemcheck.api.exception.auth.missing_entity_class: 'User entity for parameter %entity% does not exist'
+systemcheck.api.exception.auth.missing_entity_attribute: 'User entity parameter attribute is missing'
+systemcheck.api.exception.resource_not_existing: 'Resource with alias: %alias% does not exist'
+systemcheck.api.exception.resource_action_not_allowed: 'No access to resource %resource% and action %action%'
 
 # resource messages
-huh.api.message.resource.delete_success: 'Successfully deleted resource %resource% with resource_id: %id%'
-huh.api.message.resource.delete_error: 'Error while trying to delete resource %resource% with resource_id: %id%'
-huh.api.message.resource.not_existing: 'Resource %resource% with resource_id: %id% does not exist'
-huh.api.message.resource.create_entity_already_exists: 'Error on create resource %resource%, entity with resource_id: %id% does already exists, try update instead'
-huh.api.message.resource.create_success: 'Successfully created resource %resource% with resource_id: %id%'
-huh.api.message.resource.update_success: 'Successfully updated resource %resource% with resource_id: %id%'
-huh.api.message.resource.none_existing: 'No items found for resource %resource%'
-huh.api.message.resource.create_no_data_provided: 'No data provided within request to create resource %resource%'
-huh.api.message.resource.update_no_data_provided: 'No data provided within request to update resource %resource% with resource_id: %id%'
+systemcheck.api.message.resource.delete_success: 'Successfully deleted resource %resource% with resource_id: %id%'
+systemcheck.api.message.resource.delete_error: 'Error while trying to delete resource %resource% with resource_id: %id%'
+systemcheck.api.message.resource.not_existing: 'Resource %resource% with resource_id: %id% does not exist'
+systemcheck.api.message.resource.create_entity_already_exists: 'Error on create resource %resource%, entity with resource_id: %id% does already exists, try update instead'
+systemcheck.api.message.resource.create_success: 'Successfully created resource %resource% with resource_id: %id%'
+systemcheck.api.message.resource.update_success: 'Successfully updated resource %resource% with resource_id: %id%'
+systemcheck.api.message.resource.none_existing: 'No items found for resource %resource%'
+systemcheck.api.message.resource.create_no_data_provided: 'No data provided within request to create resource %resource%'
+systemcheck.api.message.resource.update_no_data_provided: 'No data provided within request to update resource %resource% with resource_id: %id%'

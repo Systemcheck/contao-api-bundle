@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\ApiResource;
+namespace Systemcheck\ContaoApiBundle\ApiResource;
 
 class MemberResource extends EntityResource
 {

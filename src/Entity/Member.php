@@ -6,11 +6,11 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Entity;
+namespace Systemcheck\ContaoApiBundle\Entity;
 
 use Contao\MemberModel;
 use Contao\StringUtil;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 
 class Member extends User
 {

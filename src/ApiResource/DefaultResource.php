@@ -6,10 +6,10 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\ApiResource;
+namespace Systemcheck\ContaoApiBundle\ApiResource;
 
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use HeimrichHannot\ApiBundle\Security\User\UserInterface;
+use Systemcheck\ContaoApiBundle\Api\Security\User\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +21,7 @@ class DefaultResource implements ResourceInterface
     /**
      * {@inheritdoc}
      */
-    public function create(Request $request, UserInterface $user): ?array
+    public function create(Request $request, $user): ?array
     {
         return [];
     }
@@ -37,8 +37,9 @@ class DefaultResource implements ResourceInterface
     /**
      * {@inheritdoc}
      */
-    public function list(Request $request, UserInterface $user): ?array
+    public function list(Request $request, $user): ?array
     {
+        
         return [];
     }
 

@@ -6,17 +6,18 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Backend;
+namespace Systemcheck\ContaoApiBundle\Backend;
 
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Contao\System;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 
 class ApiApp
 {
@@ -25,14 +26,14 @@ class ApiApp
      */
     protected $framework;
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
     public function editButton($row, $href, $label, $title, $icon, $attributes)
     {
-        $resourceManager = System::getContainer()->get('huh.api.manager.resource');
+        $resourceManager = System::getContainer()->get('systemcheck.api.manager.resource');
 
         switch ($row['type']) {
             case $resourceManager::TYPE_ENTITY_RESOURCE:
@@ -183,8 +184,8 @@ class ApiApp
         if ($row['published'] !== '1') {
             $icon = 'invisible.svg';
         }
-
-        return '<a href="' . Controller::addToUrl($href) . '&rt=' . \RequestToken::get() . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label, 'data-state="' . ($row['published'] === '1' ? 1 : 0) . '"') . '</a> ';
+        //' . \Contao\RequestToken::get() . '
+        return '<a href="' . Controller::addToUrl($href) . '&rt=" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . \Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] === '1' ? 1 : 0) . '"') . '</a> ';
     }
 
     public function toggleVisibility($intId, $blnVisible, \DataContainer $dc = null)

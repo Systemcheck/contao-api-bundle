@@ -1,31 +1,31 @@
 # exception messages
-huh.api.exception.auth.required: Authentifizierung erforderlich
-huh.api.exception.auth.invalid_credentials: Ungültiger Benutzername oder Passwort
-huh.api.exception.auth.post_method_only: Anmeldung nur per POST-Anfrage möglich.
-huh.api.exception.auth.refresh_not_possible: Nutzer kann nicht aktualisiert werden.
-huh.api.exception.auth.invalid_username: Ungültiger Nutzername
-huh.api.exception.auth.user_not_found: 'Benutzer mit dem Namen %username% wurde nicht gefunden'
-huh.api.exception.auth.user_not_existing: 'Benutzer mit dem Namen %username% existiert nicht'
-huh.api.exception.auth.invalid_token: Ungültiger Token
-huh.api.exception.auth.token_expired: Token abgelaufen
-huh.api.exception.auth.missing_authorization_header: Fehlender Autorisierungs-Header
-huh.api.exception.auth.malformed_authorization_header: Fehlerhafter Autorisierungs-Header
-huh.api.exception.auth.missing_api_key: Fehlender API-Schlüssel
-huh.api.exception.auth.invalid_api_key: Ungültiger API-Schlüssel
-huh.api.exception.auth.malformed_jwt: Fehlerhafter JWT-Token
-huh.api.exception.auth.invalid_jwt: Ungültiger JWT-Token
-huh.api.exception.auth.user_not_allowed_for_api: 'Der Nutzer hat keinen Zugriff auf die API mit dem Schlüssel %key%'
-huh.api.exception.auth.missing_entity: 'Nutzer-Entität Parameter fehlt'
-huh.api.exception.auth.missing_entity_class: 'Nutzer-Entität für den Parameter %entity% existiert nicht'
-huh.api.exception.auth.missing_entity_attribute: 'Parameter zur Selektierung der Nutzer-Entität fehlt'
-huh.api.exception.resource_not_existing: 'Resource mit dem Alias: %alias% existiert nicht'
-huh.api.exception.resource_action_not_allowed: 'Kein Zugriff auf die Resource %resource% mit der Aktion: %action%'
+systemcheck.api.exception.auth.required: Authentifizierung erforderlich
+systemcheck.api.exception.auth.invalid_credentials: Ungültiger Benutzername oder Passwort
+systemcheck.api.exception.auth.post_method_only: Anmeldung nur per POST-Anfrage möglich.
+systemcheck.api.exception.auth.refresh_not_possible: Nutzer kann nicht aktualisiert werden.
+systemcheck.api.exception.auth.invalid_username: Ungültiger Nutzername
+systemcheck.api.exception.auth.user_not_found: 'Benutzer mit dem Namen %username% wurde nicht gefunden'
+systemcheck.api.exception.auth.user_not_existing: 'Benutzer mit dem Namen %username% existiert nicht'
+systemcheck.api.exception.auth.invalid_token: Ungültiger Token
+systemcheck.api.exception.auth.token_expired: Token abgelaufen
+systemcheck.api.exception.auth.missing_authorization_header: Fehlender Autorisierungs-Header
+systemcheck.api.exception.auth.malformed_authorization_header: Fehlerhafter Autorisierungs-Header
+systemcheck.api.exception.auth.missing_api_key: Fehlender API-Schlüssel
+systemcheck.api.exception.auth.invalid_api_key: Ungültiger API-Schlüssel
+systemcheck.api.exception.auth.malformed_jwt: Fehlerhafter JWT-Token
+systemcheck.api.exception.auth.invalid_jwt: Ungültiger JWT-Token
+systemcheck.api.exception.auth.user_not_allowed_for_api: 'Der Nutzer hat keinen Zugriff auf die API mit dem Schlüssel %key%'
+systemcheck.api.exception.auth.missing_entity: 'Nutzer-Entität Parameter fehlt'
+systemcheck.api.exception.auth.missing_entity_class: 'Nutzer-Entität für den Parameter %entity% existiert nicht'
+systemcheck.api.exception.auth.missing_entity_attribute: 'Parameter zur Selektierung der Nutzer-Entität fehlt'
+systemcheck.api.exception.resource_not_existing: 'Resource mit dem Alias: %alias% existiert nicht'
+systemcheck.api.exception.resource_action_not_allowed: 'Kein Zugriff auf die Resource %resource% mit der Aktion: %action%'
 
 # resource messages
-huh.api.message.resource.delete_success: 'Resource %resource% mit der resource_id: %id% wurde erfolgreich gelöscht'
-huh.api.message.resource.delete_error: 'Fehler beim Löschen der Resource %resource% mit der resource_id: %id%'
-huh.api.message.resource.not_existing: 'Resource %resource% mit der resource_id: %id% existiert nicht'
-huh.api.message.resource.create_entity_already_exists: 'Fehler beim Erstellen der Resource %resource%. Entität mit der resource_id: %id% existiert bereits, versuchen Sie stattdessen die Resource zu aktualisieren (update).'
-huh.api.message.resource.create_success: 'Resource %resource% mit der resource_id: %id% erfolgreich erstellt'
-huh.api.message.resource.update_success: 'Resource %resource% mit der resource_id: %id% erfolgreich aktualisiert'
-huh.api.message.resource.none_existing: 'Es wurden keine Entitäten für die Resource %resource% gefunden'
+systemcheck.api.message.resource.delete_success: 'Resource %resource% mit der resource_id: %id% wurde erfolgreich gelöscht'
+systemcheck.api.message.resource.delete_error: 'Fehler beim Löschen der Resource %resource% mit der resource_id: %id%'
+systemcheck.api.message.resource.not_existing: 'Resource %resource% mit der resource_id: %id% existiert nicht'
+systemcheck.api.message.resource.create_entity_already_exists: 'Fehler beim Erstellen der Resource %resource%. Entität mit der resource_id: %id% existiert bereits, versuchen Sie stattdessen die Resource zu aktualisieren (update).'
+systemcheck.api.message.resource.create_success: 'Resource %resource% mit der resource_id: %id% erfolgreich erstellt'
+systemcheck.api.message.resource.update_success: 'Resource %resource% mit der resource_id: %id% erfolgreich aktualisiert'
+systemcheck.api.message.resource.none_existing: 'Es wurden keine Entitäten für die Resource %resource% gefunden'

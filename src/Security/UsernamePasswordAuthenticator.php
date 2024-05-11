@@ -6,16 +6,30 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Security;
+namespace Systemcheck\ContaoApiBundle\Security;
 
 use Contao\Config;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Hmac\Sha512;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+
+class UsernamePasswordAuthenticator extends AbstractAuthenticator
 {
     /**
      * {@inheritdoc}
@@ -27,7 +41,7 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
         }
 
         if ('POST' !== $request->getMethod()) {
-            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.post_method_only'));
+            throw new AuthenticationException($this->translator->trans('systemcheck.api.exception.auth.post_method_only'));
         }
 
         return [
@@ -52,7 +66,7 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
     /**
      * {@inheritdoc}
      *
-     * @var \HeimrichHannot\ApiBundle\Security\User\UserInterface
+     * @var \Systemcheck\ContaoApiBundle\Api\Security\User\UserInterface
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
@@ -84,7 +98,7 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
             $user->loginCount = ($user->loginCount - 1);
             $user->save();
 
-            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.invalid_credentials'));
+            throw new AuthenticationException($this->translator->trans('systemcheck.api.exception.auth.invalid_credentials'));
         }
 
         /** @var Config $config */
@@ -101,12 +115,120 @@ class UsernamePasswordAuthenticator extends AbstractGuardAuthenticator
     /**
      * {@inheritdoc}
      */
-    public function supports(Request $request)
+    public function supports(Request $request): ?bool
     {
-        if (\in_array($request->attributes->get('_scope'), ['api_login_user', 'api_login_member'])) {
+        
+        if (\in_array($request->attributes->get('_scope'), ['api', 'api_login_user', 'api_login_member'])) {
             return true;
         }
 
         return false;
+    }
+
+    public function authenticate(Request $request): Passport
+    {
+        
+        $token = $request->headers->get('authorization');
+        if($token) {
+            $token = str_replace("Bearer ", "", $token);
+
+            $config = null;
+            $secret = 'ed625c764398c552aa7837a8598338dc642003e593b140d27a8a81eea3322292';
+            $this->config = $config ?: Configuration::forSymmetricSigner(new Sha512(), InMemory::plainText($secret));
+            $this->config->setValidationConstraints(new SignedWith($this->config->signer(), $this->config->signingKey()));
+            //$builder = $this->config->builder();
+
+            $token = $this->config->parser()->parse($token);
+
+            if (
+                $token->isExpired(new \DateTimeImmutable())
+                || !$this->config->validator()->validate($token, ...$this->config->validationConstraints())
+            ) {
+                return new SelfValidatingPassport(new UserBadge('null'));
+                
+            }
+        
+            $arr = array_map(
+                static function ($value) {
+                    if ($value instanceof \DateTimeInterface) {
+                        return $value->format('U');
+                    }
+
+                    return (string) $value;
+                },
+                $token->claims()->all() 
+            );
+            return new SelfValidatingPassport(new UserBadge($arr["username"]));
+            return new Passport(
+                new UserBadge((string)$arr["username"]),
+                new PasswordCredentials((string) $arr["password"])
+            );
+            
+
+            dd($arr);
+        }
+        dd($token);
+        //dd($request->headers->get('AUTHORIZATION'));
+        $data = $request->getContent();
+        if($data != "") {
+            $data = json_decode($data);
+        }
+        
+        $password = $request->getPayload()->get('password');
+        $username = $request->getPayload()->get('username');
+        
+        return new Passport(
+            new UserBadge((string)$username),
+            new PasswordCredentials((string) $password)
+        );
+        $apiToken = $request->headers->get('X-AUTH-TOKEN');
+        if (null === $apiToken) {
+            // The token header was empty, authentication fails with HTTP Status
+            // Code 401 "Unauthorized"
+            throw new CustomUserMessageAuthenticationException('No API token provided');
+        }
+
+        // implement your own logic to get the user identifier from `$apiToken`
+        // e.g. by looking up a user in the database using its API key
+        $userIdentifier = 'key';
+
+        
+    }
+
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    {
+        // on success, let the request continue
+        //return new JsonResponse(['ok'], Response::HTTP_OK);
+        
+        return null;
+    }
+
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    {
+        $token = $request->headers->get('authorization');
+        $token = str_replace("Bearer ", "", $token);
+        $secret = 'ed625c764398c552aa7837a8598338dc642003e593b140d27a8a81eea3322292';
+        $config = $this->config;
+        $this->config = $config ?: Configuration::forSymmetricSigner(new Sha512(), InMemory::plainText($secret));
+        $this->config->setValidationConstraints(new SignedWith($this->config->signer(), $this->config->signingKey()));
+            //$builder = $this->config->builder();
+
+            $token = $this->config->parser()->parse($token);
+
+            if($token->isExpired(new \DateTimeImmutable())) {
+                return new JsonResponse( [
+                    'message' => "Deine Sitzung ist abgelaufen. Erneut einloggen"
+                ], Response::HTTP_UNAUTHORIZED );
+            }
+
+        $data = [
+            // you may want to customize or obfuscate the message first
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+
+            // or to translate this message
+            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
+        ];
+
+        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 }

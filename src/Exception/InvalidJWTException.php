@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Exception;
+namespace Systemcheck\ContaoApiBundleException;
 
 class InvalidJWTException extends \UnexpectedValueException
 {

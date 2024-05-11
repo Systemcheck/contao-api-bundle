@@ -6,12 +6,12 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Security;
+namespace Systemcheck\ContaoApiBundle\Api\Security;
 
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
-use HeimrichHannot\ApiBundle\Exception\ExpiredTokenException;
-use HeimrichHannot\ApiBundle\Exception\InvalidJWTException;
+use Systemcheck\ContaoApiBundleException\ExpiredTokenException;
+use Systemcheck\ContaoApiBundleException\InvalidJWTException;
 
 class JWTCoder
 {
@@ -49,9 +49,9 @@ class JWTCoder
         try {
             $payload = JWT::decode($token, $this->key, [self::ALG]);
         } catch (ExpiredException $e) {
-            throw new ExpiredTokenException('huh.api.exception.auth.token_expired');
+            throw new ExpiredTokenException('systemcheck.api.exception.auth.token_expired');
         } catch (\Exception $e) {
-            throw new InvalidJWTException('huh.api.exception.auth.invalid_token');
+            throw new InvalidJWTException('systemcheck.api.exception.auth.invalid_token');
         }
 
         return $payload;

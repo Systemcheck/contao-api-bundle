@@ -6,10 +6,10 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test;
+namespace Systemcheck\ContaoApiBundleTest;
 
-use HeimrichHannot\ApiBundle\ContaoApiBundle;
-use HeimrichHannot\ApiBundle\DependencyInjection\Compiler\ApiResourcePass;
+use Systemcheck\ContaoApiBundleContaoApiBundle;
+use Systemcheck\ContaoApiBundleDependencyInjection\Compiler\ApiResourcePass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
@@ -24,7 +24,7 @@ class ContaoApiBundleTest extends TestCase
     {
         $bundle = new ContaoApiBundle();
 
-        $this->assertInstanceOf('HeimrichHannot\ApiBundle\ContaoApiBundle', $bundle);
+        $this->assertInstanceOf('Systemcheck\ContaoApiBundleContaoApiBundle', $bundle);
     }
 
     /**
@@ -35,7 +35,7 @@ class ContaoApiBundleTest extends TestCase
         $bundle = new ContaoApiBundle();
 
         $this->assertInstanceOf(
-            'HeimrichHannot\ApiBundle\DependencyInjection\ApiExtension',
+            'Systemcheck\ContaoApiBundleDependencyInjection\ApiExtension',
             $bundle->getContainerExtension()
         );
     }

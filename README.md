@@ -47,7 +47,7 @@ services:
 		arguments:
               - "my_resource"
 		tags:
-		- { name: huh.api.resource, alias: my_resource}
+		- { name: systemcheck.api.resource, alias: my_resource}
 ```
 
 And register your resource configuration within your bundles or app `config.yml`:
@@ -77,7 +77,7 @@ class Plugin implements ExtensionPluginInterface
     public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
     {
         return ContainerUtil::mergeConfigFile(
-            'huh_api',
+            'systemcheck_api',
             $extensionName,
             $extensionConfigs,
             __DIR__.'/../Resources/config/config.yml'
@@ -131,7 +131,7 @@ curl --header "Authorization: Bearer <login-token>" -H "Content-Type: applicatio
 
 ### Available Resources
 
-#### Service: huh.api.resource.member 
+#### Service: systemcheck.api.resource.member 
 
 Skeleton resource that provides simple crud functionality with contao member (tl_member) entity 
 

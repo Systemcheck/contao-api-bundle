@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\DependencyInjection\Compiler;
+namespace Systemcheck\ContaoApiBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,18 +23,18 @@ class ApiResourcePass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->findDefinition('huh.api.manager.resource');
-
-        // find all service IDs with the huh.api.resource tag
-        $taggedServices = $container->findTaggedServiceIds('huh.api.resource');
-
+        $definition = $container->findDefinition('systemcheck.api.manager.resource');
+        //
+        // find all service IDs with the systemcheck.api.resource tag
+        $taggedServices = $container->findTaggedServiceIds('systemcheck.api.resource');
+        //dd($taggedServices);
         foreach ($taggedServices as $id => $tags) {
             // a service could have the same tag twice
             foreach ($tags as $attributes) {
                 if (!isset($attributes['alias'])) {
-                    throw new InvalidArgumentException(sprintf('Missing tag information "alias" on huh.api.resource tagged service "%s".', $id));
+                    throw new InvalidArgumentException(sprintf('Missing tag information "alias" on systemcheck.api.resource tagged service "%s".', $id));
                 }
-
+                
                 $definition->addMethodCall(
                     'add',
                     [

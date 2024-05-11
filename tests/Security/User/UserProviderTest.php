@@ -6,12 +6,12 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Security\User;
+namespace Systemcheck\ContaoApiBundleTest\Security\User;
 
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use HeimrichHannot\ApiBundle\Entity\Member;
-use HeimrichHannot\ApiBundle\Security\User\UserProvider;
+use Systemcheck\ContaoApiBundleEntity\Member;
+use Systemcheck\ContaoApiBundle\Api\Security\User\UserProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -30,7 +30,7 @@ class UserProviderTest extends ContaoTestCase
     {
         $provider = new UserProvider($this->mockContaoFramework(), new Translator('en'));
 
-        $this->assertInstanceOf('HeimrichHannot\ApiBundle\Security\User\UserProvider', $provider);
+        $this->assertInstanceOf('Systemcheck\ContaoApiBundle\Api\Security\User\UserProvider', $provider);
     }
 
     /**
@@ -63,18 +63,18 @@ class UserProviderTest extends ContaoTestCase
         $requestStack->push($request);
 
         $container = $this->mockContainer();
-        $container->set('huh.api.test.hooks', $hookMock);
+        $container->set('systemcheck.api.test.hooks', $hookMock);
         $container->set('request_stack', $requestStack);
         $provider->setContainer($container);
 
-        $GLOBALS['TL_HOOKS']['importUser'][] = ['huh.api.test.hooks', 'importUserHook'];
+        $GLOBALS['TL_HOOKS']['importUser'][] = ['systemcheck.api.test.hooks', 'importUserHook'];
 
         System::setContainer($container);
 
         try {
             $provider->loadUserByEntityAndUsername($member, 'user@test.tld');
         } catch (UsernameNotFoundException $e) {
-            $this->assertEquals('huh.api.exception.auth.user_not_found', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.user_not_found', $e->getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ class UserProviderTest extends ContaoTestCase
         try {
             $provider->loadUserByEntityAndUsername($member, 'user@test.tld');
         } catch (UsernameNotFoundException $e) {
-            $this->assertEquals('huh.api.exception.auth.user_not_existing', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.user_not_existing', $e->getMessage());
         }
     }
 
@@ -105,7 +105,7 @@ class UserProviderTest extends ContaoTestCase
         try {
             $provider->loadUserByEntityAndUsername(new Member($this->mockContaoFramework()), '');
         } catch (UsernameNotFoundException $e) {
-            $this->assertEquals('huh.api.exception.auth.invalid_username', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.invalid_username', $e->getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ class UserProviderTest extends ContaoTestCase
         try {
             $provider->loadUserByUsername(['entity' => '']);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.missing_entity', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.missing_entity', $e->getMessage());
         }
     }
 
@@ -130,13 +130,13 @@ class UserProviderTest extends ContaoTestCase
     {
         $provider = new UserProvider($this->mockContaoFramework(), new Translator('en'));
         $container = $this->mockContainer();
-        $container->setParameter('huh.api.entity.member', '');
+        $container->setParameter('systemcheck.api.entity.member', '');
         $provider->setContainer($container);
 
         try {
-            $provider->loadUserByUsername(['entity' => 'huh.api.entity.member']);
+            $provider->loadUserByUsername(['entity' => 'systemcheck.api.entity.member']);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.missing_entity_class', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.missing_entity_class', $e->getMessage());
         }
     }
 
@@ -150,7 +150,7 @@ class UserProviderTest extends ContaoTestCase
         try {
             $provider->refreshUser(new Member($this->mockContaoFramework()));
         } catch (UnsupportedUserException $e) {
-            $this->assertEquals('huh.api.exception.auth.refresh_not_possible', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.refresh_not_possible', $e->getMessage());
         }
     }
 

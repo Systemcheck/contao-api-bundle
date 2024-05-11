@@ -6,11 +6,11 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Util;
+namespace Systemcheck\ContaoApiBundle\Util;
 
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -21,12 +21,16 @@ class ApiUtil implements FrameworkAwareInterface, ContainerAwareInterface
 
     public function getResourceConfigByName(string $resourceName)
     {
-        $resources = $this->container->getParameter('huh.api');
 
+        $r = \Contao\System::getContainer()->getParameter('systemcheck');
+        
+        $resources = $r;
+
+    
         if (!isset($resources['api']['resources'])) {
             return false;
         }
-
+        
         foreach ($resources['api']['resources'] as $resource) {
             if ($resource['name'] === $resourceName) {
                 return $resource;
@@ -38,7 +42,7 @@ class ApiUtil implements FrameworkAwareInterface, ContainerAwareInterface
 
     public function getResourceConfigByModelClass(string $modelClass)
     {
-        $resources = $this->container->getParameter('huh.api');
+        $resources = $this->container->getParameter('systemcheck.api');
 
         if (!isset($resources['api']['resources'])) {
             return false;
@@ -55,7 +59,7 @@ class ApiUtil implements FrameworkAwareInterface, ContainerAwareInterface
 
     public function getResourceFieldOptions(string $resourceName)
     {
-        $resourceConfig = $this->container->get('huh.api.util.api_util')->getResourceConfigByName($resourceName);
+        $resourceConfig = $this->container->get('systemcheck.api.util.api_util')->getResourceConfigByName($resourceName);
 
         if (!\is_array($resourceConfig) || !class_exists($resourceConfig['modelClass'])) {
             return [];

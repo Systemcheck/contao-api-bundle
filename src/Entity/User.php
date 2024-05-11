@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Entity;
+namespace Systemcheck\ContaoApiBundle\Entity;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
@@ -14,9 +14,9 @@ use Contao\Date;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\UserModel;
-use HeimrichHannot\ApiBundle\Model\ApiAppActionModel;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
-use HeimrichHannot\ApiBundle\Security\User\UserInterface;
+use Systemcheck\ContaoApiBundle\Model\ApiAppActionModel;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundle\Security\User\UserInterface;
 
 class User implements UserInterface
 {
@@ -55,7 +55,7 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return StringUtil::deserialize($this->_model->groups, true);
     }
@@ -79,7 +79,15 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsername()
+    public function getUsername(): string
+    {
+        return $this->_model->username;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUserIdentifier(): string
     {
         return $this->_model->username;
     }

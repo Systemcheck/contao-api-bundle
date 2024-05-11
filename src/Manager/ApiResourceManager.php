@@ -6,12 +6,14 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Manager;
+namespace Systemcheck\ContaoApiBundle\Manager;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\System;
-use HeimrichHannot\ApiBundle\ApiResource\ResourceInterface;
+use Systemcheck\ContaoApiBundle\ApiResource\ResourceInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ApiResourceManager
 {
@@ -22,11 +24,6 @@ class ApiResourceManager
         self::TYPE_RESOURCE,
         self::TYPE_ENTITY_RESOURCE,
     ];
-
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    protected $framework;
 
     /**
      * Available resources.
@@ -47,9 +44,15 @@ class ApiResourceManager
      *
      * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(private ContaoFramework $framework, private ParameterBagInterface $params)
     {
-        $this->framework = $framework;
+        /*$resources = $params->get('systemcheck');
+        $resources = $resources["api"]["resources"];
+        foreach($resources as $resource) {
+            $r[$resource['name']] = $resource;
+        }
+        $this->resources = $r;*/
+        
     }
 
     /**
@@ -73,6 +76,8 @@ class ApiResourceManager
      */
     public function get($alias)
     {
+        //dd($this->resources);
+        //dd($alias);
         if (array_key_exists($alias, $this->resources)) {
             return $this->resources[$alias];
         }
@@ -104,38 +109,44 @@ class ApiResourceManager
     public function choices(DataContainer $dc): array
     {
         $choices = [];
-
+        
         if (!$dc->activeRecord->type) {
             return [];
         }
+        
+        $allowedResources = $this->getResourcesByAppType($dc->activeRecord->type); // 0 => 'Default
 
-        $allowedResources = $this->getResourcesByAppType($dc->activeRecord->type);
-
-        foreach ($this->resources as $key => $resource) {
-            if (\in_array($key, $allowedResources)) {
-                $choices[$key] = sprintf($key.' ['.$this->services[$key].']');
+        foreach ($allowedResources as $key => $resource) {
+            
+            if (\in_array($resource, $allowedResources)) {
+                
+                $choices[$key] = sprintf($key.' ['.$allowedResources[$key].']');
             }
         }
-
+        
         return $choices;
     }
 
     public function getResourcesByAppType(string $appType)
     {
-        $resources = System::getContainer()->getParameter('huh.api');
-
+        $resources = System::getContainer()->getParameter('systemcheck');
+        
         if (!isset($resources['api']['resources'])) {
+            
             return [];
         }
-
+        
         $result = [];
 
         foreach ($resources['api']['resources'] as $resource) {
+            
             if ($resource['type'] === $appType) {
+                
                 $result[] = $resource['name'];
             }
         }
-
         return $result;
     }
+
+    
 }

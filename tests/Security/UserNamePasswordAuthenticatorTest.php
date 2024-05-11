@@ -6,16 +6,16 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Security;
+namespace Systemcheck\ContaoApiBundleTest\Security;
 
 use Contao\Config;
 use Contao\MemberModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use HeimrichHannot\ApiBundle\Entity\Member;
-use HeimrichHannot\ApiBundle\Security\JWTCoder;
-use HeimrichHannot\ApiBundle\Security\User\UserProvider;
-use HeimrichHannot\ApiBundle\Security\UsernamePasswordAuthenticator;
+use Systemcheck\ContaoApiBundleEntity\Member;
+use Systemcheck\ContaoApiBundle\Api\Security\JWTCoder;
+use Systemcheck\ContaoApiBundle\Api\Security\User\UserProvider;
+use Systemcheck\ContaoApiBundle\Api\Security\UsernamePasswordAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -31,7 +31,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
     {
         $authenticator = new UsernamePasswordAuthenticator($this->mockContaoFramework(), new JWTCoder('secret'), new Translator('en'));
 
-        $this->assertInstanceOf('HeimrichHannot\ApiBundle\Security\UsernamePasswordAuthenticator', $authenticator);
+        $this->assertInstanceOf('Systemcheck\ContaoApiBundle\Api\Security\UsernamePasswordAuthenticator', $authenticator);
     }
 
     /**
@@ -51,7 +51,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         $authenticator = new UsernamePasswordAuthenticator($this->mockContaoFramework(), new JWTCoder('secret'), new Translator('en'));
         $response = $authenticator->start(new Request());
         $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-        $this->assertEquals(['message' => 'huh.api.exception.auth.required'], json_decode($response->getContent(), true));
+        $this->assertEquals(['message' => 'systemcheck.api.exception.auth.required'], json_decode($response->getContent(), true));
     }
 
     /**
@@ -91,7 +91,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         try {
             $authenticator->getCredentials($request);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.post_method_only', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.post_method_only', $e->getMessage());
         }
     }
 
@@ -109,13 +109,13 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
 
         $request->request->set('username', 'user@test.tld');
         $request->request->set('password', 'secret');
-        $request->attributes->set('_entity', 'huh.api.entity.member');
+        $request->attributes->set('_entity', 'systemcheck.api.entity.member');
 
         $this->assertEquals(
             [
                 'username' => 'user@test.tld',
                 'password' => 'secret',
-                'entity' => 'huh.api.entity.member',
+                'entity' => 'systemcheck.api.entity.member',
             ],
             $authenticator->getCredentials($request)
         );
@@ -129,7 +129,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         $credentials = [
             'username' => 'user@test.tld',
             'password' => 'secret',
-            'entity' => 'huh.api.entity.member',
+            'entity' => 'systemcheck.api.entity.member',
         ];
 
         $framework = $this->mockContaoFramework();
@@ -151,7 +151,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         try {
             $authenticator->checkCredentials($credentials, $member);
         } catch (AuthenticationException $e) {
-            $this->assertEquals('huh.api.exception.auth.invalid_credentials', $e->getMessage());
+            $this->assertEquals('systemcheck.api.exception.auth.invalid_credentials', $e->getMessage());
         }
     }
 
@@ -163,7 +163,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         $credentials = [
             'username' => 'user@test.tld',
             'password' => 'secretPassword',
-            'entity' => 'huh.api.entity.member',
+            'entity' => 'systemcheck.api.entity.member',
         ];
 
         $configAdapter = $this->mockAdapter(['get']);
@@ -199,7 +199,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         $credentials = [
             'username' => 'user@test.tld',
             'password' => 'rasmuslerdorf',
-            'entity' => 'huh.api.entity.member',
+            'entity' => 'systemcheck.api.entity.member',
         ];
 
         $configAdapter = $this->mockAdapter(['get']);
@@ -235,7 +235,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         $credentials = [
             'username' => 'user@test.tld',
             'password' => 'secretPassword',
-            'entity' => 'huh.api.entity.member',
+            'entity' => 'systemcheck.api.entity.member',
         ];
 
         $time = time();
@@ -254,9 +254,9 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         );
 
         $container = $this->mockContainer();
-        $container->set('huh.api.test.hooks', $hookMock);
+        $container->set('systemcheck.api.test.hooks', $hookMock);
 
-        $GLOBALS['TL_HOOKS']['checkCredentials'][] = ['huh.api.test.hooks', 'checkCredentialsHook'];
+        $GLOBALS['TL_HOOKS']['checkCredentials'][] = ['systemcheck.api.test.hooks', 'checkCredentialsHook'];
 
         System::setContainer($container);
 
@@ -288,7 +288,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         $credentials = [
             'username' => 'user@test.tld',
             'password' => 'secretPassword',
-            'entity' => 'huh.api.entity.member',
+            'entity' => 'systemcheck.api.entity.member',
         ];
 
         $memberModel = $this->mockClassWithProperties(MemberModel::class, ['username' => 'user@test.tld']);
@@ -306,7 +306,7 @@ class UserNamePasswordAuthenticatorTest extends ContaoTestCase
         $authenticator = new UsernamePasswordAuthenticator($framework, $encoder, $translator);
 
         $container = $this->mockContainer();
-        $container->setParameter('huh.api.entity.member', Member::class);
+        $container->setParameter('systemcheck.api.entity.member', Member::class);
 
         $userProvider = new UserProvider($framework, $translator);
         $userProvider->setContainer($container);

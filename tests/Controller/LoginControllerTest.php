@@ -6,12 +6,12 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Controller;
+namespace Systemcheck\ContaoApiBundleTest\Controller;
 
 use Contao\TestCase\ContaoTestCase;
-use HeimrichHannot\ApiBundle\Controller\LoginController;
-use HeimrichHannot\ApiBundle\Entity\User;
-use HeimrichHannot\ApiBundle\Security\JWTCoder;
+use Systemcheck\ContaoApiBundle\Controller\LoginController;
+use Systemcheck\ContaoApiBundleEntity\User;
+use Systemcheck\ContaoApiBundle\Api\Security\JWTCoder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -23,7 +23,7 @@ class LoginControllerTest extends ContaoTestCase
     {
         $controller = new LoginController();
 
-        $this->assertInstanceOf('HeimrichHannot\ApiBundle\Controller\LoginController', $controller);
+        $this->assertInstanceOf('Systemcheck\ContaoApiBundle\Controller\LoginController', $controller);
     }
 
     /**
@@ -34,7 +34,7 @@ class LoginControllerTest extends ContaoTestCase
         $user = $this->createMock(User::class);
 
         $container = $this->mockContainer();
-        $container->set('huh.api.jwt_coder', new JWTCoder('secret'));
+        $container->set('systemcheck.api.jwt_coder', new JWTCoder('secret'));
         $authenticatedToken = $this->createMock(TokenInterface::class);
         $authenticatedToken->expects($this->any())->method('getUser')->willReturn($user);
 

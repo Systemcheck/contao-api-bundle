@@ -54,8 +54,8 @@ $lang['show']       = ['Anwendung Details', 'Anwendung-Details ID %s anzeigen'];
  * Resources
  */
 $lang['reference'] = [
-    \HeimrichHannot\ApiBundle\Manager\ApiResourceManager::TYPE_RESOURCE        => 'Ressource',
-    \HeimrichHannot\ApiBundle\Manager\ApiResourceManager::TYPE_ENTITY_RESOURCE => 'Entität',
+    \Systemcheck\ContaoApiBundle\Manager\ApiResourceManager::TYPE_RESOURCE        => 'Ressource',
+    \Systemcheck\ContaoApiBundle\Manager\ApiResourceManager::TYPE_ENTITY_RESOURCE => 'Entität',
     'api_resource_create'                                                      => 'Ressource anlegen (create)',
     'api_resource_update'                                                      => 'Ressource bearbeiten (update)',
     'api_resource_list'                                                        => 'Ressourcen auflisten (list)',

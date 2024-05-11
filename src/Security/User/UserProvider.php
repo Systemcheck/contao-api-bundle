@@ -6,11 +6,13 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Security\User;
+namespace Systemcheck\ContaoApiBundle\Security\User;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
-use HeimrichHannot\ApiBundle\Entity\User;
+use Contao\FrontendUser;
+use Contao\User;
+use Systemcheck\ContaoApiBundle\Entity\User as UserEntity;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -18,6 +20,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 
 class UserProvider implements ContainerAwareInterface, UserProviderInterface
 {
@@ -41,18 +44,32 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
     /**
      * Constructor.
      */
-    public function __construct(ContaoFrameworkInterface $framework, TranslatorInterface $translator)
+    public function __construct(ContaoFramework $framework, private $userClass, TranslatorInterface $translator)
     {
         $this->framework = $framework;
         $this->translator = $translator;
     }
 
+    public function loadUserByIdentifier(string $identifier): User
+    {
+        $this->framework->initialize();
+        /** @var Adapter<User> $adapter */
+        $adapter = $this->framework->getAdapter($this->userClass);
+        $user = $adapter->loadUserByIdentifier($identifier);
+        
+        if (is_a($user, $this->userClass)) {
+            return $user;
+        }
+
+        throw new UserNotFoundException(sprintf('Could not find user "%s"', $identifier));
+    }
+    
     public function loadUserByEntityAndUsername(UserInterface $user, $username)
     {
         $this->framework->initialize();
 
         if (!$username) {
-            throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.invalid_username'));
+            throw new UsernameNotFoundException($this->translator->trans('systemcheck.api.exception.auth.invalid_username'));
         }
 
         if (null === ($userFound = $user->findBy('username', $username))) {
@@ -75,10 +92,10 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
 
             // Return if the user still cannot be loaded
             if (true === $loaded && null === ($userFound = $user->findBy('username', $username))) {
-                throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_found', ['%username%' => $username]));
+                throw new UsernameNotFoundException($this->translator->trans('systemcheck.api.exception.auth.user_not_found', ['%username%' => $username]));
             }
 
-            throw new UsernameNotFoundException($this->translator->trans('huh.api.exception.auth.user_not_existing', ['%username%' => $username]));
+            throw new UsernameNotFoundException($this->translator->trans('systemcheck.api.exception.auth.user_not_existing', ['%username%' => $username]));
         }
 
         return $userFound;
@@ -93,13 +110,13 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
         $this->framework->initialize();
 
         if (!isset($attributes['entity']) || empty($attributes['entity'])) {
-            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity', ['%entity%' => $attributes['entity']]));
+            throw new AuthenticationException($this->translator->trans('systemcheck.api.exception.auth.missing_entity', ['%entity%' => $attributes['entity']]));
         }
 
         $class = $this->container->getParameter($attributes['entity']);
 
         if (!class_exists($class)) {
-            throw new AuthenticationException($this->translator->trans('huh.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
+            throw new AuthenticationException($this->translator->trans('systemcheck.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
         }
 
         /** @var UserInterface $user */
@@ -113,7 +130,7 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
      */
     public function refreshUser(\Symfony\Component\Security\Core\User\UserInterface $user)
     {
-        throw new UnsupportedUserException($this->translator->trans('huh.api.exception.auth.refresh_not_possible'));
+        throw new UnsupportedUserException($this->translator->trans('systemcheck.api.exception.auth.refresh_not_possible'));
     }
 
     /**

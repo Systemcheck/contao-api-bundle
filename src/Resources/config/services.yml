@@ -1,6 +1,7 @@
 services:
   _defaults:
-    public: true
+        autowire: true
+        autoconfigure: true
 
   _instanceof:
     Contao\CoreBundle\Framework\FrameworkAwareInterface:
@@ -11,83 +12,153 @@ services:
         - ["setContainer", ["@service_container"]]
 
 
-  HeimrichHannot\ApiBundle\:
+  Systemcheck\ContaoApiBundle\:
     resource: '../../{Controller,EventListener}/*'
     autowire: true
     autoconfigure: true
     public: false
 
-  huh.api.backend.api_app:
+  systemcheck.api.backend.api_app:
     public: true
-    class: HeimrichHannot\ApiBundle\Backend\ApiApp
+    class: Systemcheck\ContaoApiBundle\Backend\ApiApp
     arguments:
       - "@contao.framework"
-  huh.api.routing.matcher:
+  systemcheck.api.routing.matcher:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
       - ["matchAttribute", ["_scope", "api"]]
-  huh.api.routing.login.member.matcher:
+  systemcheck.api.routing.login.member.matcher:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
       - ["matchAttribute", ["_scope", "api_login_member"]]
-  huh.api.routing.login.user.matcher:
+  
+  systemcheck.api.routing.login.user.matcher:
     class: Symfony\Component\HttpFoundation\RequestMatcher
     calls:
       - ["matchAttribute", ["_scope", "api_login_user"]]
 
-  huh.api.jwt_coder:
-    class: HeimrichHannot\ApiBundle\Security\JWTCoder
+  systemcheck.api.jwt_coder:
+    class: Systemcheck\ContaoApiBundle\Api\Security\JWTCoder
     arguments:
       - "%secret%"
-  HeimrichHannot\ApiBundle\Security\JWTCoder: '@huh.api.jwt_coder'
+  Systemcheck\ContaoApiBundle\Security\JWTCoder: '@systemcheck.api.jwt_coder'
 
-  huh.api.security.token_authenticator:
-    class:  HeimrichHannot\ApiBundle\Security\TokenAuthenticator
+  systemcheck.security.api_authenticator:
+    class:  Systemcheck\ContaoApiBundle\Security\TokenAuthenticator
     arguments:
       - "@contao.framework"
-      - "@huh.api.jwt_coder"
+      - "@systemcheck.api.jwt_coder"
       - "@translator"
-  huh.api.security.user_provider:
-    class: HeimrichHannot\ApiBundle\Security\User\UserProvider
+  systemcheck.api.security.user_provider:
+    class: Systemcheck\ContaoApiBundle\Security\User\UserProvider
     arguments:
       - "@contao.framework"
-      - "@translator"
-  huh.api.security.username_password_authenticator:
-    class: HeimrichHannot\ApiBundle\Security\UsernamePasswordAuthenticator
-    arguments:
-      - "@contao.framework"
-      - "@huh.api.jwt_coder"
+      - Contao\FrontendUser
       - "@translator"
 
-  huh.api.manager.resource:
-    class: HeimrichHannot\ApiBundle\Manager\ApiResourceManager
-    public: true
+  systemcheck.api.security.username_password_authenticator:
+    class: Systemcheck\ContaoApiBundle\Security\UsernamePasswordAuthenticator
     arguments:
       - "@contao.framework"
-  HeimrichHannot\ApiBundle\Manager\ApiResourceManager: '@huh.api.manager.resource'
+      - "@systemcheck.api.jwt_coder"
+      - "@translator"
 
-  huh.api.resource.default:
-    class: HeimrichHannot\ApiBundle\ApiResource\CalendarEventResource
+  
+  
+
+  systemcheck.api.resource.default:
+    class: Systemcheck\ContaoApiBundle\ApiResource\CalendarEventResource
     arguments:
       - "calendar_event"
+      - "@contao.data_collector"
     tags:
-      - { name: huh.api.resource, alias: default}
-  huh.api.resource.calendar_event:
-    class: HeimrichHannot\ApiBundle\ApiResource\CalendarEventResource
+      - { name: systemcheck.api.resource, alias: default}
+
+  systemcheck.api.resource.calendar_event:
+    class: Systemcheck\ContaoApiBundle\ApiResource\CalendarEventResource
     arguments:
       - "calendar_event"
+      - "@contao.data_collector"
     tags:
-      - { name: huh.api.resource, alias: calendar_event}
-  huh.api.resource.member:
-    class: HeimrichHannot\ApiBundle\ApiResource\MemberResource
+      - { name: systemcheck.api.resource, alias: calendar_event}
+  systemcheck.api.resource.member:
+    class: Systemcheck\ContaoApiBundle\ApiResource\MemberResource
     arguments:
       - "member"
+      - "@contao.data_collector"
     tags:
-      - { name: huh.api.resource, alias: member}
-  huh.api.model.app:
-    class: HeimrichHannot\ApiBundle\Model\ApiAppModel
+      - { name: systemcheck.api.resource, alias: member}
+
+  systemcheck.api.resource.events:
+    class: Systemcheck\ContaoApiBundle\ApiResource\EventResource
+    arguments:
+      - "events"
+      - "@contao.data_collector"
+    tags:
+      - { name: systemcheck.api.resource, alias: events}
+
+  systemcheck.api.resource.foods:
+    class: Systemcheck\ContaoApiBundle\ApiResource\EventResource
+    arguments:
+      - "foods"
+      - "@contao.data_collector"
+    tags:
+      - { name: systemcheck.api.resource, alias: foods}
+
+  systemcheck.api.model.app:
+    class: Systemcheck\ContaoApiBundle\Model\ApiAppModel
     public: true
     shared: false
-  huh.api.util.api_util:
-    class: HeimrichHannot\ApiBundle\Util\ApiUtil
+  systemcheck.api.util.api_util:
+    class: Systemcheck\ContaoApiBundle\Util\ApiUtil
     public: true
+
+  Systemcheck\ContaoApiBundle\Backend\AppApi:
+    arguments:  
+      - "@contao.framework"
+
+  systemcheck.security.json_user_provider:
+        class: Systemcheck\ContaoApiBundle\Security\User\JsonUserProvider
+        arguments:
+            - '@contao.framework'
+            - Contao\FrontendUser
+
+  Systemcheck\ContaoApiBundle\Controller\ResourceController:
+    tags:
+          -
+            name: contao.frontend_module
+            category: aiDesigner
+            template: formdata
+            type: 'Backend Migration Controller'
+            _scope: 'api'
+    arguments:
+            - '@translator'    
+            - '@doctrine.dbal.default_connection'
+            - '@security.helper'
+            #- '@lexik_jwt_authentication.jwt_manager'
+            - '@systemcheck.api.manager.resource'
+            #- '@systemcheck.api.resource.calendar_event'
+            #- '@twig'
+            #- '@contao.routing.scope_matcher'
+
+
+
+  #systemcheck.api.manager.resource:
+   # class: Systemcheck\ContaoApiBundle\Manager\ApiResourceManager
+    #public: true
+    #arguments:
+    #  - "@contao.framework"
+  #Systemcheck\ContaoApiBundle\Manager\ApiResourceManager: '@systemcheck.api.manager.resource'
+  Systemcheck\ContaoApiBundle\Manager\ApiResourceManager: '@systemcheck.api.manager.resource'
+  systemcheck.api.manager.resource:
+        public: true
+        #synthetic: true
+        class: Systemcheck\ContaoApiBundle\Manager\ApiResourceManager
+        #tags:
+            #- { name: 'contao.callback', method: 'choices', table: 'tl_api_app', target: 'fields.field.options', priority: -1 }
+        arguments: 
+            - "@contao.framework"
+            - "@parameter_bag"
+            #- "@systemcheck.api.util.api_util"
+
+  

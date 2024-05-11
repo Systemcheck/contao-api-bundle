@@ -6,15 +6,15 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\ContaoManager;
+namespace Systemcheck\ContaoApiBundleTest\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
-use HeimrichHannot\ApiBundle\ContaoApiBundle;
-use HeimrichHannot\ApiBundle\ContaoManager\Plugin;
+use Systemcheck\ContaoApiBundleContaoApiBundle;
+use Systemcheck\ContaoApiBundleContaoManager\Plugin;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_Matcher_InvokedCount as InvokedCount;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -47,7 +47,7 @@ class PluginTest extends TestCase
      */
     public function testInstantiation()
     {
-        static::assertInstanceOf('HeimrichHannot\ApiBundle\ContaoManager\Plugin', new Plugin());
+        static::assertInstanceOf('Systemcheck\ContaoApiBundleContaoManager\Plugin', new Plugin());
     }
 
     /**
@@ -111,7 +111,7 @@ class PluginTest extends TestCase
         $this->assertArrayHasKey('api_login_user', $extensionConfigs[0]['firewalls']);
         $this->assertArrayHasKey('api', $extensionConfigs[0]['firewalls']);
 
-        $this->assertArrayHasKey('huh.api.security.user_provider', $extensionConfigs[0]['providers']);
+        $this->assertArrayHasKey('systemcheck.api.security.user_provider', $extensionConfigs[0]['providers']);
     }
 
     /**

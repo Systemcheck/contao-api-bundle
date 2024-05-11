@@ -6,11 +6,11 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Model;
+namespace Systemcheck\ContaoApiBundleTest\Model;
 
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 use Symfony\Component\DependencyInjection\Definition;
 
 class ApiAppModelTest extends ContaoTestCase
@@ -59,11 +59,11 @@ class ApiAppModelTest extends ContaoTestCase
 
         $definition = new Definition(ApiAppModel::class, []);
         $definition->addMethodCall('setFramework', [$this->mockContaoFramework()]);
-        $container->setDefinition('huh.api.model.app', $definition);
+        $container->setDefinition('systemcheck.api.model.app', $definition);
 
         System::setContainer($container);
 
-        $this->assertNull($container->get('huh.api.model.app')->findPublishedByKey('testKey'));
+        $this->assertNull($container->get('systemcheck.api.model.app')->findPublishedByKey('testKey'));
     }
 
     /**
@@ -90,11 +90,11 @@ class ApiAppModelTest extends ContaoTestCase
 
         $definition = new Definition(ApiAppModel::class, []);
         $definition->addMethodCall('setFramework', [$framework]);
-        $container->setDefinition('huh.api.model.app', $definition);
+        $container->setDefinition('systemcheck.api.model.app', $definition);
 
         System::setContainer($container);
 
-        $this->assertEquals($appModel, $container->get('huh.api.model.app')->findPublishedByKey('testKey'));
+        $this->assertEquals($appModel, $container->get('systemcheck.api.model.app')->findPublishedByKey('testKey'));
     }
 
     /**

@@ -6,11 +6,11 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Model;
+namespace Systemcheck\ContaoApiBundle\Model;
 
 use Contao\System;
 
-class ApiAppActionModel extends \Model
+class ApiAppActionModel extends \Contao\Model
 {
     protected static $strTable = 'tl_api_app_action';
 

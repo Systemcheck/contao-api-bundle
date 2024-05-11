@@ -6,12 +6,12 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Entity;
+namespace Systemcheck\ContaoApiBundleTest\Entity;
 
 use Contao\MemberModel;
 use Contao\TestCase\ContaoTestCase;
-use HeimrichHannot\ApiBundle\Entity\Member;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundleEntity\Member;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 
 class MemberTest extends ContaoTestCase
 {

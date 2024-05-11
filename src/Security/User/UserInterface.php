@@ -6,11 +6,11 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Security\User;
+namespace Systemcheck\ContaoApiBundle\Security\User;
 
 use Contao\Model;
-use HeimrichHannot\ApiBundle\Model\ApiAppActionModel;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundle\Model\ApiAppActionModel;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 
 interface UserInterface extends AdvancedUserInterface, \Symfony\Component\Security\Core\User\UserInterface
 {

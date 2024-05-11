@@ -6,130 +6,117 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Controller;
+namespace Systemcheck\ContaoApiBundle\Controller;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
-use HeimrichHannot\ApiBundle\ApiResource\ResourceInterface;
-use HeimrichHannot\ApiBundle\Manager\ApiResourceManager;
-use HeimrichHannot\ApiBundle\Model\ApiAppActionModel;
+use Systemcheck\ContaoApiBundle\ApiResource\ResourceInterface;
+use Systemcheck\ContaoApiBundle\Manager\ApiResourceManager;
+use Systemcheck\ContaoApiBundle\Model\ApiAppActionModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\DBAL\Connection;
+//use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Contao\CoreBundle\Translation\Translator;
+use Contao\CoreBundle\Controller\AbstractController as ContaoAbstractController;
+use Systemcheck\ContaoApiBundle\ApiResource\EntityResource;
 
-/**
- * @Route("/api",defaults={"_scope"="api","_token_check"=false})
- */
-class ResourceController extends AbstractController
+#[Route('/api', name: ApiController::class, defaults: ['_scope' => 'api', '_token_check' => false])]
+class ResourceController extends ContaoAbstractController// extends AbstractController
 {
-    /**
-     * @return Response
-     *
-     * @Route("/resource/{alias}", name="api_resource_create", methods={"POST"})
-     */
+    public function __construct(private Translator $translator, private Connection $connection, Security $security, private ApiResourceManager $resourceManager)
+    {
+        //$this->twig = $twig;
+        $this->security = $security;
+    }
+
+    #[Route('/{alias}', name: "api_resource_create"::class, methods: ["POST"])]
     public function createAction(string $alias, Request $request)
     {
         /** @var ResourceInterface $resource */
-        if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
-        }
+        /*if (null === ($resource = $this->container->get('systemcheck.api.manager.resource')->get($alias))) {
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_not_existing', ['%alias%' => $alias])]);
+        }*/
 
         if (false === $this->isActionAllowed($request)) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
         }
 
         return $this->json($resource->create($request, $this->getUser()));
     }
 
-    /**
-     * @param mixed $id Entity id
-     *
-     * @return Response
-     *
-     * @Route("/resource/{alias}/{id}", name="api_resource_update", methods={"PUT"})
-     */
+    #[Route('/{alias}/{id}', name: "api_resource_update"::class, methods: ["PUT"])]
     public function updateAction(string $alias, $id, Request $request)
     {
         /** @var ResourceInterface $resource */
-        if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
+        if (null === ($resource = $this->container->get('systemcheck.api.manager.resource')->get($alias))) {
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
         }
 
         return $this->json($resource->update($id, $request, $this->getUser()));
     }
 
-    /**
-     * @return Response
-     *
-     * @Route("/resource/{alias}", name="api_resource_list", methods={"GET"})
-     */
-    public function listAction(string $alias, Request $request)
+    #[Route('/{alias}', name: "api_resource_list"::class, methods: ["GET"])]
+    public function listAction(Request $request, string $alias )
     {
-        $this->container->get('contao.framework')->initialize();
-
+        
+        $framework = $this->container->get('contao.framework'); //->initialize();
+        $framework->initialize();
+        $s = $this->getParameter('systemcheck');
+        
         /** @var ResourceInterface $resource */
-        if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
+        if (null === ($resource = $this->resourceManager->get($alias))) {
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
         }
-
+        //dd($resource->list($request, $this->getUser()));
         return $this->json($resource->list($request, $this->getUser()));
     }
 
-    /**
-     * @param mixed $id Entity id
-     *
-     * @return Response
-     *
-     * @Route("/resource/{alias}/{id}", name="api_resource_show", methods={"GET"})
-     */
+    #[Route('/{alias}/{id}', name: "api_resource_show"::class, methods: ["GET"])]
     public function showAction(string $alias, $id, Request $request)
     {
         /** @var ResourceInterface $resource */
-        if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
+            if (null === ($resource = $this->resourceManager->get($alias))) {
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
         }
 
         return $this->json($resource->show($id, $request, $this->getUser()));
     }
 
-    /**
-     * @param mixed $id Entity id
-     *
-     * @return Response
-     *
-     * @Route("/resource/{alias}/{id}", name="api_resource_delete", methods={"DELETE"})
-     */
+    #[Route('/{alias}/{id}', name: "api_resource_delete"::class, methods: ["DELETE"])]
     public function deleteAction(string $alias, $id, Request $request)
     {
         /** @var ResourceInterface $resource */
-        if (null === ($resource = $this->container->get('huh.api.manager.resource')->get($alias))) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_not_existing', ['%alias%' => $alias])]);
+        if (null === ($resource = $this->container->get('systemcheck.api.manager.resource')->get($alias))) {
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_not_existing', ['%alias%' => $alias])]);
         }
 
         if (false === $this->isActionAllowed($request)) {
-            return $this->json(['message' => $this->container->get('translator')->trans('huh.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
+            return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
         }
 
         return $this->json($resource->delete($id, $request, $this->getUser()));
     }
 
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-        $services['huh.api.manager.resource'] = ApiResourceManager::class;
+        //$services['systemcheck.api.manager.resource'] = ApiResourceManager::class;
         $services['contao.framework'] = ContaoFramework::class;
 
         return $services;
@@ -140,11 +127,14 @@ class ResourceController extends AbstractController
      */
     protected function isActionAllowed(Request $request): bool
     {
-        if (null === ($app = $this->getUser()->getApp())) {
+        return true;
+        $user = $this->getUser();
+        dd($user);
+        if (null === ($app = $this->getUser() ? $this->getUser()->getApp() : null)) {
             return false;
         }
 
-        $resourceManager = $this->container->get('huh.api.manager.resource');
+        //$resourceManager = $this->container->get('systemcheck.api.manager.resource');
 
         switch ($app->type) {
             case $resourceManager::TYPE_ENTITY_RESOURCE:

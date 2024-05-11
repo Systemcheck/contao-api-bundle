@@ -6,15 +6,15 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\ApiResource;
+namespace Systemcheck\ContaoApiBundleTest\ApiResource;
 
 use Contao\MemberModel;
 use Contao\Model\Collection;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
-use HeimrichHannot\ApiBundle\ApiResource\MemberResource;
-use HeimrichHannot\ApiBundle\Entity\User;
+use Systemcheck\ContaoApiBundle\Api\Resource\MemberResource;
+use Systemcheck\ContaoApiBundleEntity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
 
@@ -53,7 +53,7 @@ class MemberResourceTest extends ContaoTestCase
     {
         $resource = new MemberResource();
 
-        $this->assertInstanceOf('HeimrichHannot\ApiBundle\ApiResource\MemberResource', $resource);
+        $this->assertInstanceOf('Systemcheck\ContaoApiBundle\Api\Resource\MemberResource', $resource);
     }
 
     /**
@@ -89,11 +89,11 @@ class MemberResourceTest extends ContaoTestCase
         System::setContainer($container);
 
         // no data provided
-        $this->assertEquals(['message' => 'huh.api.message.resource.create_no_data_provided'], $resource->create($request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.create_no_data_provided'], $resource->create($request, $user));
         $request->request->set('username', $member->username);
 
         // data provided
-        $this->assertEquals(['message' => 'huh.api.message.resource.create_success', 'item' => (array) $member], $resource->create($request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.create_success', 'item' => (array) $member], $resource->create($request, $user));
     }
 
     /**
@@ -130,7 +130,7 @@ class MemberResourceTest extends ContaoTestCase
 
         $request->request->set('username', $member->username);
         $request->request->set('id', 1000);
-        $this->assertEquals(['message' => 'huh.api.message.resource.create_entity_already_exists'], $resource->create($request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.create_entity_already_exists'], $resource->create($request, $user));
     }
 
     /**
@@ -166,7 +166,7 @@ class MemberResourceTest extends ContaoTestCase
         System::setContainer($container);
 
         // id does not exist
-        $this->assertEquals(['message' => 'huh.api.message.resource.not_existing'], $resource->update(999, $request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.not_existing'], $resource->update(999, $request, $user));
     }
 
     /**
@@ -209,11 +209,11 @@ class MemberResourceTest extends ContaoTestCase
         System::setContainer($container);
 
         // no data provided
-        $this->assertEquals(['message' => 'huh.api.message.resource.update_no_data_provided'], $resource->update(1000, $request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.update_no_data_provided'], $resource->update(1000, $request, $user));
 
         $request->request->set('username', 'updated_user@test.tld');
 
-        $this->assertEquals(['message' => 'huh.api.message.resource.update_success', 'item' => (array) $memberUpdate], $resource->update(1000, $request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.update_success', 'item' => (array) $memberUpdate], $resource->update(1000, $request, $user));
     }
 
     /**
@@ -296,7 +296,7 @@ class MemberResourceTest extends ContaoTestCase
         System::setContainer($container);
 
         // no data provided
-        $this->assertEquals(['message' => 'huh.api.message.resource.none_existing'], $resource->list($request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.none_existing'], $resource->list($request, $user));
     }
 
     /**
@@ -324,7 +324,7 @@ class MemberResourceTest extends ContaoTestCase
         System::setContainer($container);
 
         // invalid user id
-        $this->assertEquals(['message' => 'huh.api.message.resource.not_existing'], $resource->show(999, $request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.not_existing'], $resource->show(999, $request, $user));
     }
 
     /**
@@ -390,7 +390,7 @@ class MemberResourceTest extends ContaoTestCase
         System::setContainer($container);
 
         // invalid user id
-        $this->assertEquals(['message' => 'huh.api.message.resource.not_existing'], $resource->delete(999, $request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.not_existing'], $resource->delete(999, $request, $user));
     }
 
     /**
@@ -426,7 +426,7 @@ class MemberResourceTest extends ContaoTestCase
         System::setContainer($container);
 
         // invalid user id
-        $this->assertEquals(['message' => 'huh.api.message.resource.delete_error'], $resource->delete(999, $request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.delete_error'], $resource->delete(999, $request, $user));
     }
 
     /**
@@ -462,7 +462,7 @@ class MemberResourceTest extends ContaoTestCase
         System::setContainer($container);
 
         // invalid user id
-        $this->assertEquals(['message' => 'huh.api.message.resource.delete_success'], $resource->delete(999, $request, $user));
+        $this->assertEquals(['message' => 'systemcheck.api.message.resource.delete_success'], $resource->delete(999, $request, $user));
     }
 
     /**

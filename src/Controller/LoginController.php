@@ -6,9 +6,9 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Controller;
+namespace Systemcheck\ContaoApiBundle\Controller;
 
-use HeimrichHannot\ApiBundle\Security\JWTCoder;
+use Systemcheck\ContaoApiBundle\Api\Security\JWTCoder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,19 +22,19 @@ class LoginController extends AbstractController
 {
     private JWTCoder $jwtCoder;
 
-    public function __construct(JWTCoder $jwtCoder)
+    /*public function __construct(JWTCoder $jwtCoder)
     {
-        $this->jwtCoder = $jwtCoder;
-    }
+        //$this->jwtCoder = $jwtCoder;
+    }*/
 
     /**
      * @return Response
      *
-     * @Route("/login/member", name="api_login_member", methods={"POST"}, defaults={"_scope"="api_login_member", "_entity"="huh.api.entity.member"})
+     * @Route("/login/member", name="api_login_member", methods={"POST"}, defaults={"_scope"="api_login_member", "_entity"="systemcheck.api.entity.member"})
      */
     public function loginMemberAction(Request $request)
     {
-        return new JsonResponse(['token' => $this->getToken('huh.api.entity.member')]);
+        return new JsonResponse(['token' => $this->getToken('systemcheck.api.entity.member')]);
     }
 
     /**
@@ -44,7 +44,7 @@ class LoginController extends AbstractController
      */
     public function loginUserAction(Request $request)
     {
-        return new JsonResponse(['token' => $this->getToken('huh.api.entity.user')]);
+        return new JsonResponse(['token' => $this->getToken('systemcheck.api.entity.user')]);
     }
 
     private function getToken(string $entity): string
@@ -53,9 +53,12 @@ class LoginController extends AbstractController
             'entity' => $entity,
         ];
 
-        if (method_exists($this->getUser(), 'getUserIdentifier')) {
+        //dd($this->getUser());
+
+        if (!null == $this->getUser() && method_exists($this->getUser(), 'getUserIdentifier')) {
             $tokenData['username'] = $this->getUser()->getUserIdentifier();
         } else {
+            return false;
             $tokenData['username'] = $this->getUser()->getUsername();
         }
 

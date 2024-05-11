@@ -6,12 +6,12 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Backend;
+namespace Systemcheck\ContaoApiBundleTest\Backend;
 
 use Contao\DataContainer;
 use Contao\TestCase\ContaoTestCase;
-use HeimrichHannot\ApiBundle\Backend\ApiApp;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundle\Backend\ApiApp;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 
 class ApiAppTest extends ContaoTestCase
 {
@@ -22,7 +22,7 @@ class ApiAppTest extends ContaoTestCase
     {
         $backend = new ApiApp($this->mockContaoFramework());
 
-        $this->assertInstanceOf('HeimrichHannot\ApiBundle\Backend\ApiApp', $backend);
+        $this->assertInstanceOf('Systemcheck\ContaoApiBundle\Backend\ApiApp', $backend);
     }
 
     /**

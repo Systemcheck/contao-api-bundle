@@ -6,15 +6,15 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Entity;
+namespace Systemcheck\ContaoApiBundleTest\Entity;
 
 use Contao\Config;
 use Contao\Date;
 use Contao\StringUtil;
 use Contao\TestCase\ContaoTestCase;
 use Contao\UserModel;
-use HeimrichHannot\ApiBundle\Entity\User;
-use HeimrichHannot\ApiBundle\Model\ApiAppModel;
+use Systemcheck\ContaoApiBundleEntity\User;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 
 class UserTest extends ContaoTestCase
 {

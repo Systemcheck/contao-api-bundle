@@ -5,20 +5,27 @@
  *
  * @license LGPL-3.0-or-later
  */
+use Contao\System;
+use Contao\Image;
+use Contao\StringUtil;
+use Contao\DC_Table;
+use Contao\CoreBundle\Security\RequestToken;
+use Systemcheck\ContaoApiBundle\EventListener\DataContainer\Labels\LimitedFieldOptionsCallbackListener;
+use Systemcheck\ContaoApiBundle\EventListener\DataContainer\Labels\PublishedFieldOptionsCallbackListener;
 
 System::loadLanguageFile('tl_api_app');
 
 $GLOBALS['TL_DCA']['tl_api_app_action'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => DC_Table::class,
         'ptable' => 'tl_api_app',
         'enableVersioning' => true,
-        'onsubmit_callback' => [
+        /*'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
         ],
         'oncopy_callback' => [
             ['huh.utils.dca', 'setDateAddedOnCopy'],
-        ],
+        ],*/
         'sql' => [
             'keys' => [
                 'id' => 'primary',
@@ -61,7 +68,7 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
                 'label' => &$GLOBALS['TL_LANG']['tl_api_app_action']['delete'],
                 'href' => 'act=delete',
                 'icon' => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\''.$GLOBALS['TL_LANG']['MSC']['deleteConfirm'].'\'))return false;Backend.getScrollOffset()"',
+                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? 'delete').'\'))return false;Backend.getScrollOffset()"',
             ],
             'toggle' => [
                 'label' => &$GLOBALS['TL_LANG']['tl_api_app_action']['toggle'],
@@ -132,17 +139,7 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
         'limitedFields' => [
             'label' => &$GLOBALS['TL_LANG']['tl_api_app_action']['limitedFields'],
             'inputType' => 'checkboxWizard',
-            'options_callback' => function (DataContainer $dc) {
-                if (null === ($app = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_api_app', $dc->activeRecord->pid))) {
-                    return [];
-                }
-
-                if (!$app->resource) {
-                    return [];
-                }
-
-                return System::getContainer()->get('huh.api.util.api_util')->getResourceFieldOptions($app->resource);
-            },
+            'options_callback' => [LimitedFieldOptionsCallbackListener::class, '__invoke'],
             'exclude' => true,
             'eval' => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 clr autoheight'],
             'sql' => 'blob NULL',
@@ -157,7 +154,7 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
         'limitedFormattedFields' => [
             'label' => &$GLOBALS['TL_LANG']['tl_api_app_action']['limitedFormattedFields'],
             'inputType' => 'checkboxWizard',
-            'options_callback' => function (DataContainer $dc) {
+            /*'options_callback' => function (DataContainer $dc) {
                 if (null === ($app = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_api_app', $dc->activeRecord->pid))) {
                     return [];
                 }
@@ -166,8 +163,8 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
                     return [];
                 }
 
-                return System::getContainer()->get('huh.api.util.api_util')->getResourceFieldOptions($app->resource);
-            },
+                return System::getContainer()->get('systemcheck.api.util.api_util')->getResourceFieldOptions($app->resource);
+            },*/
             'exclude' => true,
             'eval' => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 clr autoheight'],
             'sql' => 'blob NULL',
@@ -183,18 +180,20 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_api_app_action']['publishedField'],
             'exclude' => true,
             'inputType' => 'select',
-            'options_callback' => function (DataContainer $dc) {
+            'options_callback' => [PublishedFieldOptionsCallbackListener::class, '__invoke'],
+            /*function (DataContainer $dc) {
+                dd($dc);
                 if (null === ($app = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_api_app', $dc->activeRecord->pid))) {
                     return [];
                 }
 
                 return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
                     [
-                        'dataContainer' => System::getContainer()->get('huh.api.util.api_util')->getEntityTableByApp($app),
+                        'dataContainer' => System::getContainer()->get('systemcheck.api.util.api_util')->getEntityTableByApp($app),
                         'inputTypes' => ['checkbox'],
                     ]
                 );
-            },
+            },*/
             'eval' => ['maxlength' => 32, 'tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'mandatory' => true],
             'sql' => "varchar(32) NOT NULL default ''",
         ],
@@ -217,17 +216,19 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (Contao\DataContainer $dc) {
+            'options_callback' => [PublishedFieldOptionsCallbackListener::class, '__invoke'],
+            /*function (Contao\DataContainer $dc) {
+                dd($dc->pid);
                 if (null === ($app = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_api_app', $dc->activeRecord->pid))) {
                     return [];
                 }
 
                 return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
                     [
-                        'dataContainer' => System::getContainer()->get('huh.api.util.api_util')->getEntityTableByApp($app),
+                        'dataContainer' => System::getContainer()->get('systemcheck.api.util.api_util')->getEntityTableByApp($app),
                     ]
                 );
-            },
+            },*/
             'eval' => ['chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'mandatory' => true],
             'sql' => "varchar(64) NOT NULL default ''",
         ],
@@ -236,17 +237,17 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (Contao\DataContainer $dc) {
+            /*'options_callback' => function (Contao\DataContainer $dc) {
                 if (null === ($app = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_api_app', $dc->activeRecord->pid))) {
                     return [];
                 }
 
                 return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
                     [
-                        'dataContainer' => System::getContainer()->get('huh.api.util.api_util')->getEntityTableByApp($app),
+                        'dataContainer' => System::getContainer()->get('systemcheck.api.util.api_util')->getEntityTableByApp($app),
                     ]
                 );
-            },
+            },*/
             'eval' => ['chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'mandatory' => true],
             'sql' => "varchar(64) NOT NULL default ''",
         ],
@@ -256,7 +257,7 @@ $GLOBALS['TL_DCA']['tl_api_app_action'] = [
             'filter' => true,
             'sorting' => true,
             'inputType' => 'select',
-            'options' => \System::getLanguages(),
+            //'options' => System::getLanguages(),
             'eval' => [
                 'includeBlankOption' => true,
                 'chosen' => true,
@@ -318,7 +319,7 @@ class tl_api_app_action extends \Contao\Backend
             $icon = 'invisible.svg';
         }
 
-        return '<a href="'.Controller::addToUrl($href).'&rt='.\RequestToken::get().'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($icon, $label, 'data-state="'.('1' === $row['published'] ? 1 : 0).'"').'</a> ';
+        return '<a href="'. \Contao\Controller::addToUrl($href).'&rt=token" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="'.('1' === $row['published'] ? 1 : 0).'"').'</a> ';
     }
 
     public function toggleVisibility($intId, $blnVisible, DataContainer $dc = null)

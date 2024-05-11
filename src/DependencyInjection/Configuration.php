@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\DependencyInjection;
+namespace Systemcheck\ContaoApiBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -30,10 +30,10 @@ class Configuration implements ConfigurationInterface
 
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('huh');
+        $treeBuilder = new TreeBuilder('systemcheck');
 
         $rootNode = $treeBuilder->getRootNode();
-
+        
         $rootNode
             ->children()
                 ->arrayNode('api')
@@ -52,7 +52,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
-
         return $treeBuilder;
     }
 }

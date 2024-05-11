@@ -6,12 +6,12 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Test\Security;
+namespace Systemcheck\ContaoApiBundleTest\Security;
 
 use Contao\TestCase\ContaoTestCase;
-use HeimrichHannot\ApiBundle\Exception\ExpiredTokenException;
-use HeimrichHannot\ApiBundle\Exception\InvalidJWTException;
-use HeimrichHannot\ApiBundle\Security\JWTCoder;
+use Systemcheck\ContaoApiBundleException\ExpiredTokenException;
+use Systemcheck\ContaoApiBundleException\InvalidJWTException;
+use Systemcheck\ContaoApiBundle\Api\Security\JWTCoder;
 
 class JwtCoderTest extends ContaoTestCase
 {
@@ -22,7 +22,7 @@ class JwtCoderTest extends ContaoTestCase
     {
         $encoder = new JWTCoder('secret');
 
-        $this->assertInstanceOf('HeimrichHannot\ApiBundle\Security\JWTCoder', $encoder);
+        $this->assertInstanceOf('Systemcheck\ContaoApiBundle\Api\Security\JWTCoder', $encoder);
     }
 
     /**
@@ -33,7 +33,7 @@ class JwtCoderTest extends ContaoTestCase
         $time = time();
 
         $encoder = new JWTCoder('secret');
-        $payload = ['username' => 'user@test.tld', 'entity' => 'huh.api.entity.user'];
+        $payload = ['username' => 'user@test.tld', 'entity' => 'systemcheck.api.entity.user'];
         $token = $encoder->encode($payload);
         $tokenPayload = $encoder->decode($token);
 
@@ -50,7 +50,7 @@ class JwtCoderTest extends ContaoTestCase
     public function testExpired()
     {
         $this->expectException(ExpiredTokenException::class);
-        $payload = ['username' => 'user@test.tld', 'entity' => 'huh.api.entity.user'];
+        $payload = ['username' => 'user@test.tld', 'entity' => 'systemcheck.api.entity.user'];
 
         $encoder = new JWTCoder('secret');
         $token = $encoder->encode($payload, 0);

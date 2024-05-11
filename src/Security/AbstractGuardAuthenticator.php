@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\ApiBundle\Security;
+namespace Systemcheck\ContaoApiBundle\Api\Security;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -54,7 +54,7 @@ abstract class AbstractGuardAuthenticator extends \Symfony\Component\Security\Gu
     {
         $data = [
             // you might translate this message
-            'message' => $this->translator->trans('huh.api.exception.auth.required'),
+            'message' => $this->translator->trans('systemcheck.api.exception.auth.required'),
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
