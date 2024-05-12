@@ -167,7 +167,7 @@ class UsernamePasswordAuthenticator extends AbstractAuthenticator
 
             dd($arr);
         }
-        dd($token);
+        
         //dd($request->headers->get('AUTHORIZATION'));
         $data = $request->getContent();
         if($data != "") {
