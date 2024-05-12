@@ -120,7 +120,12 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             "token" => $token->toString(),
             "username" => $this->user->username,
             'roles' => $this->user->getRoles(),
-            "email" => $this->user->email        ]);
+            "email" => $this->user->email,        
+            "user" => [
+                "firstname" => 'firstname',
+                "lastname" => "lastname"            
+            ]
+        ]);
         
     }
 
