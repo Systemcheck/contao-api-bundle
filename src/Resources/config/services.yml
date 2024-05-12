@@ -89,13 +89,13 @@ services:
     tags:
       - { name: systemcheck.api.resource, alias: member}
 
-  systemcheck.api.resource.events:
+  systemcheck.api.resource.termine:
     class: Systemcheck\ContaoApiBundle\ApiResource\EventResource
     arguments:
-      - "events"
+      - "termine"
       - "@contao.data_collector"
     tags:
-      - { name: systemcheck.api.resource, alias: events}
+      - { name: systemcheck.api.resource, alias: termine}
 
   systemcheck.api.resource.foods:
     class: Systemcheck\ContaoApiBundle\ApiResource\EventResource
@@ -160,5 +160,13 @@ services:
             - "@contao.framework"
             - "@parameter_bag"
             #- "@systemcheck.api.util.api_util"
+
+  balticworxx.security.authentication_success_handler:
+        class: Systemcheck\ContaoApiBundle\Security\AuthenticationSuccessHandler
+        arguments:
+            - '@contao.framework'
+            - '@contao.security.two_factor.trusted_device_manager'
+            - '@security.firewall.map'
+            - '@?logger'
 
   

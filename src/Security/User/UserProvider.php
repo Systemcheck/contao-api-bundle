@@ -61,11 +61,12 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
             return $user;
         }
 
-        throw new UserNotFoundException(sprintf('Could not find user "%s"', $identifier));
+        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $identifier));
     }
     
-    public function loadUserByEntityAndUsername(UserInterface $user, $username)
+    /*public function loadUserByEntityAndUsername(UserInterface $user, $username)
     {
+        dd('loadUserByEntityAndUsername');
         $this->framework->initialize();
 
         if (!$username) {
@@ -78,7 +79,7 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
             // HOOK: pass credentials to callback functions
             if (isset($GLOBALS['TL_HOOKS']['importUser']) && \is_array($GLOBALS['TL_HOOKS']['importUser'])) {
                 /** @var System $system */
-                $system = $this->framework->getAdapter(System::class);
+                /*$system = $this->framework->getAdapter(System::class);
 
                 foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback) {
                     $loaded = $system->importStatic($callback[0], 'import', true)->{$callback[1]}($username, $this->container->get('request_stack')->getCurrentRequest()->getPassword() ?: $this->container->get('request_stack')->getCurrentRequest()->request->get('password'), $user->getModelTable());
@@ -105,8 +106,9 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
      * @var array
      *            {@inheritdoc}
      */
-    public function loadUserByUsername($attributes)
+    /*public function loadUserByUsername($attributes)
     {
+        dd('loadUserByUsername');
         $this->framework->initialize();
 
         if (!isset($attributes['entity']) || empty($attributes['entity'])) {
@@ -120,10 +122,10 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
         }
 
         /** @var UserInterface $user */
-        $user = $this->framework->createInstance($class, [$this->framework]);
+        /*$user = $this->framework->createInstance($class, [$this->framework]);
 
         return $this->loadUserByEntityAndUsername($user, $attributes['username']);
-    }
+    }*/
 
     /**
      * {@inheritdoc}
@@ -138,6 +140,7 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
      */
     public function supportsClass($class)
     {
+        dd('supportsClass');
         return is_subclass_of($class, User::class);
     }
 }

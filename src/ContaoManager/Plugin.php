@@ -97,20 +97,14 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
                 $extensionConfig['firewalls'] = array_merge(
                     array_slice($extensionConfig['firewalls'], 0, $offset, true),
                     [
-                        'api_login_member' => [
+                        /*'api_login_member' => [
                             'request_matcher' => 'systemcheck.api.routing.login.member.matcher',
                             'stateless' => true,
-                            /*'guard' => [
-                                'authenticators' => ['systemcheck.api.security.username_password_authenticator'],
-                            ],*/
                             'provider' => 'contao.security.frontend_user_provider',
                         ],
                         'api_login_user' => [
                             'request_matcher' => 'systemcheck.api.routing.login.user.matcher',
                             'stateless' => true,
-                            /*'guard' => [
-                                'authenticators' => ['systemcheck.api.security.username_password_authenticator'],
-                            ],*/
                             "json_login" => [
                                 "provider" => "contao.security.backend_user_provider",
                                 "check_path" => "/api/login/user",
@@ -118,7 +112,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
                                 "failure_handler" => "contao.security.authentication_failure_handler"
                             ],
                             'provider' => 'contao.security.backend_user_provider',
-                        ],
+                        ],*/
                         "json_login" => [
                             'pattern' =>  "^/api/login",
                             "stateless" => true,

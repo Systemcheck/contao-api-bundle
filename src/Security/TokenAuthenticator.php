@@ -119,6 +119,7 @@ class TokenAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
+        //this is used when try to fetch api
         return ('api' === $request->attributes->get('_scope') && $request->headers->has('AUTHORIZATION'));
         if ('api' === $request->attributes->get('_scope')) {
             

@@ -2,7 +2,7 @@ systemcheck:
   api:
     resources:
       - {name: default, type: resource}
-      - {name: events, type: entity_resource, modelClass: "\\balticworxx\\ContaoFireManagerBundle\\Model\\EventModel", verboseName: events}
+      - {name: termine, type: entity_resource, modelClass: "\\balticworxx\\ContaoFireManagerBundle\\Model\\EventModel", verboseName: termine}
       - {name: foods, type: entity_resource, modelClass: "\\balticworxx\\ContaoFireManagerBundle\\Model\\FoodModel", verboseName: foods}
       - {name: calendar_event, type: entity_resource, modelClass: "\\Contao\\CalendarEventsModel", verboseName: calendar_event}
       - {name: member, type: entity_resource, modelClass: "\\Contao\\MemberModel", verboseName: member}

@@ -273,7 +273,7 @@ abstract class EntityResource implements ResourceInterface
                 $value = $v;
             }
 
-            if($value != null && $this->isBinary($value)) 
+            if($value != null && !is_int($value) && !is_array($value) && $this->isBinary($value)) 
             {
                 $uuid = \Contao\StringUtil::binToUuid($value);
                 $image = \Contao\FilesModel::findByUuid($uuid);
