@@ -125,7 +125,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             "user" => [
                 "firstname" => 'firstname',
                 "lastname" => "lastname"            
-            ]
+            ],
+            "notifications" => []
         ]);
         
     }
