@@ -121,7 +121,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
                                 "provider" => "systemcheck.json_user_provider",
                                 "check_path" => "/api/login_check",
                                 "success_handler" => "balticworxx.security.authentication_success_handler",
-                                "failure_handler" => "contao.security.authentication_failure_handler"
+                                "failure_handler" => "balticworxx.security.authentication_failure_handler"
                             ]
                         ],
                         'api' => [

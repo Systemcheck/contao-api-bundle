@@ -168,5 +168,9 @@ services:
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
             - '@?logger'
-
-  
+  balticworxx.security.authentication_failure_handler:
+        class: Systemcheck\ContaoApiBundle\Security\AuthenticationFailureHandler
+        arguments:
+            - '@contao.framework'
+            - '@security.firewall.map'
+            - '@?logger'
