@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -61,7 +62,7 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
             return $user;
         }
 
-        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $identifier));
+        throw new UserNotFoundException(sprintf('Could not find user "%s"', $identifier));
     }
     
     /*public function loadUserByEntityAndUsername(UserInterface $user, $username)

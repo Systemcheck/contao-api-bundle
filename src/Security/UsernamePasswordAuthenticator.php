@@ -205,7 +205,7 @@ class UsernamePasswordAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $token = $request->headers->get('authorization');
+        /*$token = $request->headers->get('authorization');
         $token = str_replace("Bearer ", "", $token);
         $secret = 'ed625c764398c552aa7837a8598338dc642003e593b140d27a8a81eea3322292';
         $config = $this->config;
@@ -219,7 +219,7 @@ class UsernamePasswordAuthenticator extends AbstractAuthenticator
                 return new JsonResponse( [
                     'message' => "Deine Sitzung ist abgelaufen. Erneut einloggen"
                 ], Response::HTTP_UNAUTHORIZED );
-            }
+            }*/
 
         $data = [
             // you may want to customize or obfuscate the message first
