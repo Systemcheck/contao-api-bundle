@@ -43,18 +43,26 @@ services:
       - "%secret%"
   Systemcheck\ContaoApiBundle\Security\JWTCoder: '@systemcheck.api.jwt_coder'
 
+  systemcheck.api.security.user_interface:
+    class: Systemcheck\ContaoApiBundle\Security\User\UserInterface
+
+
   systemcheck.security.api_authenticator:
     class:  Systemcheck\ContaoApiBundle\Security\TokenAuthenticator
     arguments:
-      - "@contao.framework"
+      #- "@contao.framework"
       - "@systemcheck.api.jwt_coder"
-      - "@translator"
+      - "@systemcheck.api.security.user_provider"
+      #- "@systemcheck.api.security.user_interface"
+      #- "@translator"
   systemcheck.api.security.user_provider:
     class: Systemcheck\ContaoApiBundle\Security\User\UserProvider
     arguments:
       - "@contao.framework"
-      - Contao\FrontendUser
+      #- Systemcheck\ContaoApiBundle\Entity\User #Contao\FrontendUser
       - "@translator"
+      - '@doctrine.dbal.default_connection'
+      - '@doctrine.orm.entity_manager'
 
   systemcheck.api.security.username_password_authenticator:
     class: Systemcheck\ContaoApiBundle\Security\UsernamePasswordAuthenticator

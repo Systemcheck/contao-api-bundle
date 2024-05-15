@@ -29,9 +29,15 @@ use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 
-class TokenAuthenticator extends AbstractAuthenticator
+class TokenAuthenticator extends AbstractAuthenticator //implements \Systemcheck\ContaoApiBundle\Security\User\UserInterface
 {
     private Configuration $config;
+
+    public function __construct(
+        private \Systemcheck\ContaoApiBundle\Api\Security\JWTCoder $jwtCoder,
+        private \Systemcheck\ContaoApiBundle\Security\User\UserProvider $userProvider
+    )
+    {}
 
     /**
      * Called on every request. Return whatever credentials you want to
@@ -120,7 +126,7 @@ class TokenAuthenticator extends AbstractAuthenticator
     public function supports(Request $request): ?bool
     {
         //this is used when try to fetch api
-        return ('api' === $request->attributes->get('_scope') && $request->headers->has('AUTHORIZATION'));
+        /*return ('api' === $request->attributes->get('_scope') && $request->headers->has('AUTHORIZATION'));*/
         if ('api' === $request->attributes->get('_scope')) {
             
             return true;
@@ -132,7 +138,8 @@ class TokenAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
     {
         
-        $token = $request->headers->get('authorization');
+        //TODO neu token
+        /*$token = $request->headers->get('authorization');
         if($token) {
             $token = str_replace("Bearer ", "", $token);
 
@@ -162,6 +169,7 @@ class TokenAuthenticator extends AbstractAuthenticator
                 },
                 $token->claims()->all() 
             );
+            dd($token);
             return new SelfValidatingPassport(new UserBadge($arr["username"]));
             return new Passport(
                 new UserBadge((string)$arr["username"]),
@@ -170,9 +178,29 @@ class TokenAuthenticator extends AbstractAuthenticator
             
 
             dd($arr);
+        }*/
+        //$this->userProvider->loadUserByIdentifier($request->getPayload()->get('username'));
+        $token = $request->headers->get('Authorization');
+        $token = str_replace('Bearer ', '', $token);
+        //dd($token);
+        try {
+            $payload = $this->jwtCoder->decode($token);
+        } catch (InvalidJWTException $e) {
+            throw new AuthenticationException($this->translator->trans($e->getMessage()));
+        } catch (ExpiredTokenException $e) {
+            throw new AuthenticationException($this->translator->trans('systemcheck.api.exception.auth.malformed_jwt'));
         }
-        dd($token);
-        //dd($request->headers->get('AUTHORIZATION'));
+        
+        if (!isset($payload["username"])) {
+            throw new AuthenticationException('systemcheck.api.exception.auth.invalid_jwt');
+        }
+
+        //dd($request->attributes);
+        // if a Member object, checkCredentials() is called
+        $user =  $this->userProvider->loadUserByIdentifier($payload["username"]);//['username' => $payload->username, 'entity' => $payload->entity]);
+
+        return new SelfValidatingPassport(new UserBadge($user->getUsername()));
+
         $data = $request->getContent();
         if($data != "") {
             $data = json_decode($data);

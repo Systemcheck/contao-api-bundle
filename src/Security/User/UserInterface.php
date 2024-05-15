@@ -11,8 +11,9 @@ namespace Systemcheck\ContaoApiBundle\Security\User;
 use Contao\Model;
 use Systemcheck\ContaoApiBundle\Model\ApiAppActionModel;
 use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface as SymfonyAdvancedUserInterface;
 
-interface UserInterface extends AdvancedUserInterface, \Symfony\Component\Security\Core\User\UserInterface
+interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterface
 {
     /**
      * Set current contao member model.

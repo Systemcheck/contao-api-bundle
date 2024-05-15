@@ -115,7 +115,7 @@ class ApiResourceManager
         }
         
         $allowedResources = $this->getResourcesByAppType($dc->activeRecord->type); // 0 => 'Default
-
+    
         foreach ($allowedResources as $key => $resource) {
             
             if (\in_array($resource, $allowedResources)) {
@@ -130,7 +130,8 @@ class ApiResourceManager
     public function getResourcesByAppType(string $appType)
     {
         $resources = System::getContainer()->getParameter('systemcheck');
-        
+        //resource, entity_resource
+            
         if (!isset($resources['api']['resources'])) {
             
             return [];

@@ -17,6 +17,7 @@ use Contao\UserModel;
 use Systemcheck\ContaoApiBundle\Model\ApiAppActionModel;
 use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 use Systemcheck\ContaoApiBundle\Security\User\UserInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 
 class User implements UserInterface
 {
@@ -47,7 +48,7 @@ class User implements UserInterface
      */
     protected static $table = 'tl_user';
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework) //(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }
@@ -88,6 +89,15 @@ class User implements UserInterface
      * {@inheritdoc}
      */
     public function getUserIdentifier(): string
+    {
+        return $this->_model->username;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    //TODO deprecated
+    public function loadUserByIdentifier(): string
     {
         return $this->_model->username;
     }

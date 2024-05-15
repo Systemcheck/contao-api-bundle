@@ -101,7 +101,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->config = $config ?: Configuration::forSymmetricSigner(new Sha512(), InMemory::plainText($secret));
         $this->config->setValidationConstraints(new SignedWith($this->config->signer(), $this->config->signingKey()));
         $builder = $this->config->builder();
-
+        
         $payload = [
             'username' => $this->user->username
         ];
@@ -122,9 +122,10 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             'roles' => $this->user->getRoles(),
             "email" => $this->user->email, 
             "id" => $this->user->id,       
-            "user" => [
-                "firstname" => 'firstname',
-                "lastname" => "lastname"            
+            "member" => [
+                "firstname" => $this->user->firstname,
+                "lastname" => $this->user->lastname,
+                "id" => $this->user->id           
             ],
             "notifications" => []
         ]);

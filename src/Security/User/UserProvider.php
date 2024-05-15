@@ -22,6 +22,9 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Doctrine\DBAL\Connection;
+use Contao\Doctrine\ORM\EntityManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UserProvider implements ContainerAwareInterface, UserProviderInterface
 {
@@ -45,17 +48,19 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
     /**
      * Constructor.
      */
-    public function __construct(ContaoFramework $framework, private $userClass, TranslatorInterface $translator)
+    public function __construct(ContaoFramework $framework,  TranslatorInterface $translator, private Connection $connection, private EntityManagerInterface $em)
     {
+        //private $userClass,
         $this->framework = $framework;
         $this->translator = $translator;
     }
 
-    public function loadUserByIdentifier(string $identifier): User
+    /*public function loadUserByIdentifier(string $identifier): UserEntity
     {
         $this->framework->initialize();
         /** @var Adapter<User> $adapter */
-        $adapter = $this->framework->getAdapter($this->userClass);
+        /*$adapter = $this->framework->getAdapter($this->userClass);
+
         $user = $adapter->loadUserByIdentifier($identifier);
         
         if (is_a($user, $this->userClass)) {
@@ -63,11 +68,12 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
         }
 
         throw new UserNotFoundException(sprintf('Could not find user "%s"', $identifier));
-    }
+    }*/
+
     
-    /*public function loadUserByEntityAndUsername(UserInterface $user, $username)
+    public function loadUserByEntityAndUsername(UserInterface $user, $username)
     {
-        dd('loadUserByEntityAndUsername');
+        
         $this->framework->initialize();
 
         if (!$username) {
@@ -80,7 +86,7 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
             // HOOK: pass credentials to callback functions
             if (isset($GLOBALS['TL_HOOKS']['importUser']) && \is_array($GLOBALS['TL_HOOKS']['importUser'])) {
                 /** @var System $system */
-                /*$system = $this->framework->getAdapter(System::class);
+                $system = $this->framework->getAdapter(System::class);
 
                 foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback) {
                     $loaded = $system->importStatic($callback[0], 'import', true)->{$callback[1]}($username, $this->container->get('request_stack')->getCurrentRequest()->getPassword() ?: $this->container->get('request_stack')->getCurrentRequest()->request->get('password'), $user->getModelTable());
@@ -99,7 +105,6 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
 
             throw new UsernameNotFoundException($this->translator->trans('systemcheck.api.exception.auth.user_not_existing', ['%username%' => $username]));
         }
-
         return $userFound;
     }
 
@@ -107,26 +112,43 @@ class UserProvider implements ContainerAwareInterface, UserProviderInterface
      * @var array
      *            {@inheritdoc}
      */
-    /*public function loadUserByUsername($attributes)
+    public function loadUserByIdentifier(string $identifier): UserEntity //loadUserByUsername($attributes)
     {
-        dd('loadUserByUsername');
+        
         $this->framework->initialize();
 
-        if (!isset($attributes['entity']) || empty($attributes['entity'])) {
+        /*if (!isset($attributes['entity']) || empty($attributes['entity'])) {
             throw new AuthenticationException($this->translator->trans('systemcheck.api.exception.auth.missing_entity', ['%entity%' => $attributes['entity']]));
-        }
+        }*/
 
-        $class = $this->container->getParameter($attributes['entity']);
+        /*$class = $this->container->getParameter($attributes['entity']);
 
         if (!class_exists($class)) {
             throw new AuthenticationException($this->translator->trans('systemcheck.api.exception.auth.missing_entity_class', ['%entity%' => $attributes['entity']]));
-        }
+        }*/
 
         /** @var UserInterface $user */
-        /*$user = $this->framework->createInstance($class, [$this->framework]);
-
-        return $this->loadUserByEntityAndUsername($user, $attributes['username']);
-    }*/
+        $adapter = $this->framework->getAdapter('Systemcheck\ContaoApiBundle\Entity\User');
+        //$doctrineManager = \Contao\Doctrine\ORM\EntityManagerRegistry::getInstance()->getManager();
+        //$entityManager = new EntityManagerInterface;
+        //$user = $this->em->getRepository(UserEntity::class)->findOneBy(['name' => $identifier]);
+        $class = 'UserEntity::class';
+         /** @var UserInterface $user */
+         //new UserEntity($this->framework)
+        $user = $this->framework->createInstance('\Systemcheck\ContaoApiBundle\Entity\User', [$this->framework]);
+        
+        return $this->loadUserByEntityAndUsername($user, $identifier);
+        dd($token);
+        $user = new FrontendUser;
+        dd($user);
+        $user = $adapter->getUserIdentifier(); //findBy('username',$identifier);
+        dd($user);
+        
+        dd($user);
+        $user = $this->framework; //->createInstance($class, [$this->framework]);
+        dd($user);
+        return $this->loadUserByEntityAndUsername($user, $identifier);
+    }
 
     /**
      * {@inheritdoc}

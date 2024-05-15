@@ -13,6 +13,7 @@ use Contao\StringUtil;
 use Systemcheck\ContaoApiBundle\ApiResource\ResourceInterface;
 use Systemcheck\ContaoApiBundle\Manager\ApiResourceManager;
 use Systemcheck\ContaoApiBundle\Model\ApiAppActionModel;
+use Systemcheck\ContaoApiBundle\Model\ApiAppModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,14 +38,15 @@ class ResourceController extends ContaoAbstractController// extends AbstractCont
     public function createAction(string $alias, Request $request)
     {
         /** @var ResourceInterface $resource */
-        /*if (null === ($resource = $this->container->get('systemcheck.api.manager.resource')->get($alias))) {
+        if (null === ($resource = $this->resourceManager->get($alias))) {
             return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_not_existing', ['%alias%' => $alias])]);
-        }*/
+        }
+
 
         if (false === $this->isActionAllowed($request)) {
             return $this->json(['message' => $this->translator->trans('systemcheck.api.exception.resource_action_not_allowed', ['%resource%' => $alias, '%action%' => $request->attributes->get('_route')])]);
         }
-
+    
         return $this->json($resource->create($request, $this->getUser()));
     }
 
@@ -66,10 +68,12 @@ class ResourceController extends ContaoAbstractController// extends AbstractCont
     #[Route('/{alias}', name: "api_resource_list"::class, methods: ["GET"])]
     public function listAction(Request $request, string $alias )
     {
-        
+            
         $framework = $this->container->get('contao.framework'); //->initialize();
         $framework->initialize();
         $s = $this->getParameter('systemcheck');
+        
+        //$this->setApp($request->attributes->get('_route_params'));
         
         /** @var ResourceInterface $resource */
         if (null === ($resource = $this->resourceManager->get($alias))) {
@@ -128,17 +132,22 @@ class ResourceController extends ContaoAbstractController// extends AbstractCont
     protected function isActionAllowed(Request $request): bool
     {
         return true;
-        $user = $this->getUser();
-        dd($user);
-        if (null === ($app = $this->getUser() ? $this->getUser()->getApp() : null)) {
+        if (null === ($app = $this->getUser()->getApp())) {
             return false;
         }
 
+        
+        $app = 'SW';
+        
+        /*if (null === ($app = $this->getUser() ? $this->getUser() : null)) {
+            return false;
+        }*/
+        $type = 'resource'; //$app->type
         //$resourceManager = $this->container->get('systemcheck.api.manager.resource');
-
-        switch ($app->type) {
+        $resourceManager = $this->resourceManager;
+        switch ($type) {
             case $resourceManager::TYPE_ENTITY_RESOURCE:
-                if (null === ($action = ApiAppActionModel::findOneBy(['tl_api_app_action.pid=?', 'tl_api_app_action.type=?'], [$app->id, $request->attributes->get('_route')]))) {
+                if (null === ($action = ApiAppActionModel::findOneBy(['tl_api_app_action.pid=?', 'tl_api_app_action.type=?'], [2 /*$app->id*/, $request->attributes->get('_route')]))) {
                     return false;
                 }
 
@@ -155,5 +164,12 @@ class ResourceController extends ContaoAbstractController// extends AbstractCont
         }
 
         return true;
+    }
+
+    private function setApp($resource) 
+    {
+        
+        $app = ApiAppModel::findByResource('%'.$resource['alias'].'%');
+        
     }
 }

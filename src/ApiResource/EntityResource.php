@@ -14,6 +14,7 @@ use Contao\Input;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\FrontendUser;
 use Systemcheck\ContaoApiBundle\Api\Security\User\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,14 +52,18 @@ abstract class EntityResource implements ResourceInterface
     /**
      * {@inheritdoc}
      */
-    public function create(Request $request, UserInterface $user): ?array
+    public function create(Request $request, $user): ?array
     {
         /** @var Model $adapter */
         $adapter = $this->framework->getAdapter($this->modelClass);
 
-        $data = $request->request->all();
-        $pk = $adapter->getPk();
+        $data = $request->getContent();
 
+        if(!null == $data) {
+            $data = json_decode($data, true);
+        }
+        $pk = $adapter->getPk();
+        
         if (empty($data)) {
             return [
                 'message' => $this->container->get('translator')->trans('systemcheck.api.message.resource.create_no_data_provided', ['%resource%' => $this->verboseName]),
@@ -70,20 +75,28 @@ abstract class EntityResource implements ResourceInterface
                 'message' => $this->container->get('translator')->trans('systemcheck.api.message.resource.create_entity_already_exists', ['%resource%' => $this->verboseName, '%id%' => $id]),
             ];
         }
-
-        $adapter->setRow($data);
-        $adapter->save();
+        //dd();
+        $classs = new \ReflectionClass($this->modelClass);
+        
+        $className = $this->modelClass;
+        $object = new $className;
+        $object->test($data);
+        $object->setRow($data);
+        $object->save();
+        
+        //$adapter->setRow($data);
+        //$adapter->save();
 
         return [
-            'message' => $this->container->get('translator')->trans('systemcheck.api.message.resource.create_success', ['%resource%' => $this->verboseName, '%id%' => $model->{$pk}]),
-            'item' => $adapter->row(),
+            'message' => $this->container->get('translator')->trans('systemcheck.api.message.resource.create_success', ['%resource%' => $this->verboseName, '%id%' => $object->{$pk}]),
+            'item' => $object->row(),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update($id, Request $request, UserInterface $user): ?array
+    public function update($id, Request $request,  $user): ?array
     {
         $id = (int) $id;
 
